@@ -69,12 +69,12 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ===== Submit Score (for future games) =====
-export async function submitScore(gameName, score) {
+export async function submitScore(gameName, score, playerName) {
     const user = auth.currentUser;
     if (!user) return;
     await addDoc(collection(db, 'leaderboard', gameName, 'scores'), {
         userId:    user.uid,
-        name:      user.displayName,
+        name:      playerName || user.displayName || 'Guest',
         avatar:    user.photoURL,
         score:     score,
         createdAt: serverTimestamp()
