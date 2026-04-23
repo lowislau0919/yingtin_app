@@ -237,26 +237,36 @@ async function endMatch() {
     document.getElementById('finalScore').innerText = score;
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
+    // Start loading leaderboard immediately
+    loadLeaderboard();
+    
+    // Submit score in background
     try {
         const playerName = localStorage.getItem('snakePlayerName') || 'Anon';
-        await submitScore('snake', score, playerName);
-    } catch (e) {}
-    loadLeaderboard();
+        submitScore('snake', score, playerName);
+    } catch (e) {
+        console.error("Submit score error:", e);
+    }
 }
 
 async function loadLeaderboard() {
     const list = document.getElementById('leaderboardList');
-    list.innerHTML = '<li>Loading...</li>';
+    list.innerHTML = '<li style="text-align:center; opacity:0.6;">Loading / 載入中...</li>';
     try {
         const scores = await getTopScores('snake', 10);
         list.innerHTML = '';
+        if (scores.length === 0) {
+            list.innerHTML = '<li style="text-align:center; opacity:0.6;">No scores yet / 暫無分數</li>';
+            return;
+        }
         scores.forEach((s, i) => {
             const li = document.createElement('li');
             li.innerHTML = `<span>#${i+1} ${s.name || 'Anon'}</span> <span>${s.score}</span>`;
             list.appendChild(li);
         });
     } catch (e) {
-        list.innerHTML = '<li>Leaderboard Error</li>';
+        console.error("Leaderboard Load Error:", e);
+        list.innerHTML = `<li style="text-align:center; color:#ef4444;">Error / 錯誤: ${e.message.substring(0,20)}...</li>`;
     }
 }
 

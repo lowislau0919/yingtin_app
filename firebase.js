@@ -96,10 +96,21 @@ export async function getTopScores(gameName, topN = 10) {
         );
         const snap = await getDocs(q);
         const allScores = snap.docs.map(d => d.data());
+        
         // Filter by game and take topN
-        return allScores
+        const filtered = allScores
             .filter(s => s.game === gameName)
             .slice(0, topN);
+
+        // FALLBACK: If no scores in database yet, show some demo scores
+        if (filtered.length === 0) {
+            return [
+                { name: "YingTin", score: 500 },
+                { name: "SnakePro", score: 300 },
+                { name: "AppleLover", score: 150 }
+            ];
+        }
+        return filtered;
     } catch (e) {
         console.error("Failed to fetch scores:", e);
         throw e;
