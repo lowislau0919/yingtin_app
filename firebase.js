@@ -3,7 +3,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc,
-         query, orderBy, limit, getDocs, serverTimestamp }
+         query, orderBy, limit, getDocs, getDocsFromServer, serverTimestamp }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -106,9 +106,9 @@ export async function getTopScores(gameName, topN = 10) {
             limit(100)
         );
 
-        // Race the database fetch against the timeout
+        // Force fetch from server to avoid any cache hangs
         const snap = await Promise.race([
-            getDocs(q),
+            getDocsFromServer(q),
             timeoutPromise
         ]);
 

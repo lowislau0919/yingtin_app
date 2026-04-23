@@ -237,10 +237,12 @@ async function endMatch() {
     document.getElementById('finalScore').innerText = score;
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
-    // Start loading leaderboard immediately
-    loadLeaderboard();
+    // Wait 1 second before loading leaderboard to ensure the new score is processed
+    setTimeout(() => {
+        loadLeaderboard();
+    }, 1000);
     
-    // Submit score in background
+    // Submit score in background immediately
     try {
         const playerName = localStorage.getItem('snakePlayerName') || 'Anon';
         submitScore('snake', score, playerName);
