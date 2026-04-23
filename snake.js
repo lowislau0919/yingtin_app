@@ -77,6 +77,12 @@ function startGame() {
         alert(uiText[currentLang].loginReq);
         return;
     }
+    
+    // Resume audio context for mobile browsers
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
     playSound(440, 'sine', 0.2); // Start sound
     
     document.getElementById('gameStartScreen').classList.add('hidden');
