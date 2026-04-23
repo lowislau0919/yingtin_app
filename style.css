@@ -371,7 +371,30 @@ canvas {
 
 .game-over-screen p {
     font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.name-input-container {
     margin-bottom: 20px;
+    width: 80%;
+    max-width: 250px;
+}
+
+#playerNameInput {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+    outline: none;
+}
+
+#playerNameInput:focus {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 10px var(--accent-color);
 }
 
 .restart-btn {

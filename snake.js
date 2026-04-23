@@ -63,6 +63,12 @@ export function openSnakeGame() {
     isGameOver = false;
     if (gameLoop) clearInterval(gameLoop);
     
+    // Pre-fill name from localStorage
+    const savedName = localStorage.getItem('snakePlayerName');
+    if (savedName) {
+        document.getElementById('playerNameInput').value = savedName;
+    }
+    
     document.getElementById('gameStartScreen').classList.remove('hidden');
     document.getElementById('gameOverScreen').classList.add('hidden');
     drawInitial();
@@ -84,6 +90,13 @@ function startGame() {
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
+    
+    const playerName = document.getElementById('playerNameInput').value.trim();
+    if (!playerName) {
+        alert(currentLang === 'zh' ? '請輸入名字！' : 'Please enter your name!');
+        return;
+    }
+    localStorage.setItem('snakePlayerName', playerName);
     
     playSound(440, 'sine', 0.2); // Start sound
     
@@ -225,7 +238,8 @@ async function endMatch() {
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
     try {
-        await submitScore('snake', score);
+        const playerName = localStorage.getItem('snakePlayerName') || 'Anon';
+        await submitScore('snake', score, playerName);
     } catch (e) {}
     loadLeaderboard();
 }
