@@ -29,6 +29,16 @@
         <!-- Header -->
         <header class="app-header">
             <h1 class="app-title">YingTin App</h1>
+            <div class="header-auth">
+                <button id="loginBtn" class="login-btn">
+                    <span>🔑</span> 登入
+                </button>
+                <div id="userInfo" class="user-info" style="display:none">
+                    <img id="userAvatar" class="user-avatar" src="" alt="avatar">
+                    <span id="userName" class="user-name"></span>
+                    <button id="logoutBtn" class="logout-btn">登出</button>
+                </div>
+            </div>
         </header>
 
         <!-- Content Area -->
@@ -128,7 +138,8 @@
         </nav>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
+    <script type="module" src="firebase.js"></script>
     <script>
         // Lock zoom - prevent pinch-to-zoom on iOS and Android
         document.addEventListener('touchstart', function(e) {
