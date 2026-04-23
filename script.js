@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             return;
                         }
                         document.getElementById('gameOverlay').classList.remove('hidden');
-                        if (window.initSnakeGame) window.initSnakeGame();
+                        if (window.openSnakeGame) window.openSnakeGame();
                     });
                 }
             }

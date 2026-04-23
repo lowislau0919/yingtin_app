@@ -201,7 +201,23 @@ document.getElementById('langToggleBtn').addEventListener('click', () => {
     updateLanguage();
 });
 
+function openSnakeGame() {
+    // Show start screen, hide game over screen
+    document.getElementById('gameStartScreen').classList.remove('hidden');
+    document.getElementById('gameOverScreen').classList.add('hidden');
+    
+    // Clear canvas
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+document.getElementById('startGameBtn').addEventListener('click', () => {
+    document.getElementById('gameStartScreen').classList.add('hidden');
+    initGame();
+});
+
 // Export to window so script.js can call it
+window.openSnakeGame = openSnakeGame;
 window.initSnakeGame = initGame;
 window.stopSnakeGame = () => {
     isGameOver = true;
