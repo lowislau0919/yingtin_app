@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yingtin-cache-v8';
+const CACHE_NAME = 'yingtin-cache-v9';
 const ASSETS = [
   '/',
   '/index.html',

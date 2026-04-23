@@ -87,32 +87,39 @@ export async function submitScore(gameName, score, playerName) {
 
 // ===== Get Top Scores =====
 export async function getTopScores(gameName, topN = 10) {
+    const demoScores = [
+        { name: "YingTin", score: 500 },
+        { name: "SnakePro", score: 300 },
+        { name: "AppleLover", score: 150 }
+    ];
+
     try {
-        // We use a simple query to avoid needing a composite index in Firestore
+        // Create a timeout promise
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Timeout")), 3000)
+        );
+
+        // Simple query: orderBy 'score' only to avoid composite index issues
         const q = query(
             collection(db, 'scores'),
             orderBy('score', 'desc'),
-            limit(100) // Get more and filter in JS
+            limit(100)
         );
-        const snap = await getDocs(q);
+
+        // Race the database fetch against the timeout
+        const snap = await Promise.race([
+            getDocs(q),
+            timeoutPromise
+        ]);
+
         const allScores = snap.docs.map(d => d.data());
-        
-        // Filter by game and take topN
         const filtered = allScores
             .filter(s => s.game === gameName)
             .slice(0, topN);
 
-        // FALLBACK: If no scores in database yet, show some demo scores
-        if (filtered.length === 0) {
-            return [
-                { name: "YingTin", score: 500 },
-                { name: "SnakePro", score: 300 },
-                { name: "AppleLover", score: 150 }
-            ];
-        }
-        return filtered;
+        return filtered.length > 0 ? filtered : demoScores;
     } catch (e) {
-        console.error("Failed to fetch scores:", e);
-        throw e;
+        console.warn("Leaderboard fetch failed or timed out, using demo scores:", e);
+        return demoScores;
     }
 }
