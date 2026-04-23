@@ -155,7 +155,17 @@
                 <div class="name-input-container">
                     <input type="text" id="playerNameInput" placeholder="Enter Your Name / 輸入名字" maxlength="12">
                 </div>
-                <button id="startGameBtn" class="restart-btn">Start Game / 開始</button>
+                <div class="menu-actions">
+                    <button id="startGameBtn" class="restart-btn">Start Game / 開始</button>
+                    <button id="showLeaderboardBtn" class="menu-btn secondary">🏆 Top Scores / 排行榜</button>
+                </div>
+            </div>
+
+            <!-- Leaderboard Modal -->
+            <div id="leaderboardModal" class="game-over-screen hidden" style="z-index: 1001;">
+                <h3 id="leaderboardTitle">Top 10</h3>
+                <ul id="leaderboardList"></ul>
+                <button id="closeLeaderboardBtn" class="menu-btn">Close / 關閉</button>
             </div>
 
             <div id="gameOverScreen" class="game-over-screen hidden">

@@ -36,6 +36,7 @@ const uiText = {
         gameOver: "Game Over!",
         score: "Score:",
         tryAgain: "Try Again",
+        top10: "Global Top 10",
         langToggle: "EN/中",
         startTitle: "🍎 Apple Snake",
         startBtn: "Start Game",
@@ -47,6 +48,7 @@ const uiText = {
         gameOver: "遊戲結束！",
         score: "分數：",
         tryAgain: "再試一次",
+        top10: "全球前 10 名",
         langToggle: "EN/中",
         startTitle: "🍎 蘋果貪食蛇",
         startBtn: "開始遊戲",
@@ -243,6 +245,46 @@ async function endMatch() {
     }
 }
 
+async function loadLeaderboard() {
+    const list = document.getElementById('leaderboardList');
+    list.innerHTML = '<li style="text-align:center; opacity:0.6;">Loading / 載入中...</li>';
+    try {
+        const scores = await getTopScores('snake', 10);
+        list.innerHTML = '';
+        scores.forEach((s, i) => {
+            const li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.padding = '8px 0';
+            li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.innerText = `${i+1}. ${s.name || 'Anon'}`;
+            
+            const scoreSpan = document.createElement('span');
+            scoreSpan.innerText = s.score;
+            scoreSpan.style.color = 'var(--accent-color)';
+            scoreSpan.style.fontWeight = 'bold';
+            
+            li.appendChild(nameSpan);
+            li.appendChild(scoreSpan);
+            list.appendChild(li);
+        });
+    } catch (e) {
+        console.error("Leaderboard Load Error:", e);
+        list.innerHTML = `<li style="text-align:center; color:#ef4444; font-size:0.8rem;">Error: ${e.message}</li>`;
+    }
+}
+
+function showLeaderboard() {
+    document.getElementById('leaderboardModal').classList.remove('hidden');
+    loadLeaderboard();
+}
+
+function closeLeaderboard() {
+    document.getElementById('leaderboardModal').classList.add('hidden');
+}
+
 function changeDir(dir) {
     if (!gameActive) return;
     if (dir === 'UP' && dy !== 1) { dx = 0; dy = -1; }
@@ -260,6 +302,8 @@ document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.pr
 function updateLanguage() {
     const texts = uiText[currentLang];
     document.getElementById('gameOverTitle').innerText = texts.gameOver;
+    document.getElementById('leaderboardTitle').innerText = texts.top10;
+    document.getElementById('showLeaderboardBtn').innerText = `🏆 ${texts.top10}`;
     document.getElementById('restartGameBtn').innerText = texts.tryAgain;
     document.getElementById('startGameBtn').innerText = texts.startBtn;
     document.getElementById('goToMenuBtn').innerText = texts.menuBtn;
@@ -275,6 +319,8 @@ document.getElementById('langToggleBtn').addEventListener('click', () => {
 document.getElementById('startGameBtn').addEventListener('click', startGame);
 document.getElementById('restartGameBtn').addEventListener('click', startGame);
 document.getElementById('goToMenuBtn').addEventListener('click', openSnakeGame);
+document.getElementById('showLeaderboardBtn').addEventListener('click', showLeaderboard);
+document.getElementById('closeLeaderboardBtn').addEventListener('click', closeLeaderboard);
 
 window.openSnakeGame = openSnakeGame;
 window.stopSnakeGame = () => {

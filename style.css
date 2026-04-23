@@ -414,9 +414,39 @@ canvas {
     color: white;
     border: 1px solid var(--glass-border);
     border-radius: 8px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.menu-btn.secondary {
+    background: rgba(var(--accent-color-rgb), 0.1);
+    border-color: var(--accent-color);
+}
+
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 80%;
+    max-width: 250px;
+}
+
+#leaderboardList {
+    list-style: none;
+    padding: 0;
+    width: 90%;
+    max-height: 200px;
+    overflow-y: auto;
     margin-bottom: 20px;
+}
+
+#leaderboardList li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .game-over-actions {
