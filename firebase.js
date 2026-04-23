@@ -68,26 +68,40 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// ===== Submit Score (for future games) =====
+// ===== Submit Score =====
 export async function submitScore(gameName, score, playerName) {
     const user = auth.currentUser;
     if (!user) return;
-    await addDoc(collection(db, 'leaderboard', gameName, 'scores'), {
-        userId:    user.uid,
-        name:      playerName || user.displayName || 'Guest',
-        avatar:    user.photoURL,
-        score:     score,
-        createdAt: serverTimestamp()
-    });
+    try {
+        await addDoc(collection(db, 'scores'), {
+            userId:    user.uid,
+            name:      playerName || user.displayName || 'Guest',
+            game:      gameName,
+            score:     score,
+            createdAt: serverTimestamp()
+        });
+    } catch (e) {
+        console.error("Score submission failed:", e);
+    }
 }
 
-// ===== Get Top Scores (for future games) =====
+// ===== Get Top Scores =====
 export async function getTopScores(gameName, topN = 10) {
-    const q = query(
-        collection(db, 'leaderboard', gameName, 'scores'),
-        orderBy('score', 'desc'),
-        limit(topN)
-    );
-    const snap = await getDocs(q);
-    return snap.docs.map(d => d.data());
+    try {
+        // We use a simple query to avoid needing a composite index in Firestore
+        const q = query(
+            collection(db, 'scores'),
+            orderBy('score', 'desc'),
+            limit(100) // Get more and filter in JS
+        );
+        const snap = await getDocs(q);
+        const allScores = snap.docs.map(d => d.data());
+        // Filter by game and take topN
+        return allScores
+            .filter(s => s.game === gameName)
+            .slice(0, topN);
+    } catch (e) {
+        console.error("Failed to fetch scores:", e);
+        throw e;
+    }
 }
