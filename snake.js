@@ -36,7 +36,6 @@ const uiText = {
         gameOver: "Game Over!",
         score: "Score:",
         tryAgain: "Try Again",
-        top10: "Global Top 10",
         langToggle: "EN/中",
         startTitle: "🍎 Apple Snake",
         startBtn: "Start Game",
@@ -48,7 +47,6 @@ const uiText = {
         gameOver: "遊戲結束！",
         score: "分數：",
         tryAgain: "再試一次",
-        top10: "全球前 10 名",
         langToggle: "EN/中",
         startTitle: "🍎 蘋果貪食蛇",
         startBtn: "開始遊戲",
@@ -237,52 +235,11 @@ async function endMatch() {
     document.getElementById('finalScore').innerText = score;
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
-    // Wait 1 second before loading leaderboard to ensure the new score is processed
-    setTimeout(() => {
-        loadLeaderboard();
-    }, 1000);
-    
-    // Submit score in background immediately
     try {
         const playerName = localStorage.getItem('snakePlayerName') || 'Anon';
         submitScore('snake', score, playerName);
     } catch (e) {
         console.error("Submit score error:", e);
-    }
-}
-
-async function loadLeaderboard() {
-    const list = document.getElementById('leaderboardList');
-    list.innerHTML = '<li style="text-align:center; opacity:0.6;">Loading / 載入中...</li>';
-    try {
-        const scores = await getTopScores('snake', 10);
-        list.innerHTML = '';
-        if (scores.length === 0) {
-            list.innerHTML = '<li style="text-align:center; opacity:0.6;">No scores yet / 暫無分數</li>';
-            return;
-        }
-        scores.forEach((s, i) => {
-            const li = document.createElement('li');
-            li.style.display = 'flex';
-            li.style.justifyContent = 'space-between';
-            li.style.padding = '4px 0';
-            li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-            
-            const nameSpan = document.createElement('span');
-            nameSpan.innerText = `${i+1}. ${s.name || 'Anon'}`;
-            
-            const scoreSpan = document.createElement('span');
-            scoreSpan.innerText = s.score;
-            scoreSpan.style.color = 'var(--accent-color)';
-            scoreSpan.style.fontWeight = 'bold';
-            
-            li.appendChild(nameSpan);
-            li.appendChild(scoreSpan);
-            list.appendChild(li);
-        });
-    } catch (e) {
-        console.error("Leaderboard Load Error:", e);
-        list.innerHTML = `<li style="text-align:center; color:#ef4444; font-size:0.8rem;">Error: ${e.message}</li>`;
     }
 }
 
@@ -303,7 +260,6 @@ document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.pr
 function updateLanguage() {
     const texts = uiText[currentLang];
     document.getElementById('gameOverTitle').innerText = texts.gameOver;
-    document.getElementById('leaderboardTitle').innerText = texts.top10;
     document.getElementById('restartGameBtn').innerText = texts.tryAgain;
     document.getElementById('startGameBtn').innerText = texts.startBtn;
     document.getElementById('goToMenuBtn').innerText = texts.menuBtn;
