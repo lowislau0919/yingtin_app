@@ -1,9 +1,10 @@
 const fruitData = {
-    apple: {
-        name: '蘋果',
-        icon: '🍎',
-        description: '新鮮甜美的紅蘋果，充滿營養與活力。',
-        color: '#ef4444'
+    snakeGame: {
+        name: '貪食蛇',
+        icon: '🐍',
+        description: '經典貪食蛇遊戲！與全球玩家一較高下。<br>(Classic Snake game! Compete worldwide.)',
+        color: '#10b981',
+        hasGame: true
     },
     banana: {
         name: '香蕉',
@@ -134,10 +135,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <h2 class="fruit-name">${data.name}</h2>
                         <p class="fruit-description">${data.description}</p>
+                        <div id="gameActionContainer">
+                            ${data.hasGame ? `<button id="playGameBtn" class="play-game-btn">🎮 Play Game / 玩遊戲</button>` : ''}
+                        </div>
                     </div>
                 </div>
             `;
+            
+            // Attach play button listener
+            if (data.hasGame) {
+                const playBtn = document.getElementById('playGameBtn');
+                if (playBtn) {
+                    playBtn.addEventListener('click', () => {
+                        document.getElementById('gameOverlay').classList.remove('hidden');
+                        if (window.initSnakeGame) window.initSnakeGame();
+                    });
+                }
+            }
         }, 300);
+    }
+
+    // --- Close Game Listener ---
+    const closeGameBtn = document.getElementById('closeGameBtn');
+    if (closeGameBtn) {
+        closeGameBtn.addEventListener('click', () => {
+            document.getElementById('gameOverlay').classList.add('hidden');
+            if (window.stopSnakeGame) window.stopSnakeGame();
+        });
     }
 
     // --- Nav Track Slide ---
@@ -211,5 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Initial state ---
+    switchPage('snakeGame');
     setPositionByIndex();
 });
