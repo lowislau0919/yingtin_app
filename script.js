@@ -92,6 +92,12 @@ const fruitData = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Splash Screen ---
+    const splash = document.getElementById('splashScreen');
+    setTimeout(() => {
+        splash.classList.add('hidden');
+    }, 2300);
+
     const navItems = document.querySelectorAll('.nav-item');
     const contentArea = document.getElementById('appContent');
     const navTrack = document.getElementById('navTrack');
