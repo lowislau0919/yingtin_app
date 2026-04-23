@@ -385,6 +385,22 @@ canvas {
     margin-bottom: 20px;
 }
 
+.menu-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.game-over-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .leaderboard-container {
     width: 80%;
     max-width: 300px;
@@ -420,8 +436,8 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0 30px;
-    gap: 10px;
+    padding: 5px 0 15px; /* Reduced from 10px 0 30px to move it up */
+    gap: 8px;
     background: var(--glass-bg);
     border-top: 1px solid var(--glass-border);
 }

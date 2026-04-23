@@ -40,6 +40,7 @@ const uiText = {
         langToggle: "EN/中",
         startTitle: "🍎 Apple Snake",
         startBtn: "Start Game",
+        menuBtn: "Back to Menu",
         loginReq: "Login Required!",
         eatMsg: "Yum!"
     },
@@ -51,6 +52,7 @@ const uiText = {
         langToggle: "EN/中",
         startTitle: "🍎 蘋果貪食蛇",
         startBtn: "開始遊戲",
+        menuBtn: "返回選單",
         loginReq: "請先登入！",
         eatMsg: "好味！"
     }
@@ -264,6 +266,7 @@ function updateLanguage() {
     document.getElementById('leaderboardTitle').innerText = texts.top10;
     document.getElementById('restartGameBtn').innerText = texts.tryAgain;
     document.getElementById('startGameBtn').innerText = texts.startBtn;
+    document.getElementById('goToMenuBtn').innerText = texts.menuBtn;
     const scoreBox = document.querySelector('.game-score');
     scoreBox.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
 }
@@ -275,6 +278,7 @@ document.getElementById('langToggleBtn').addEventListener('click', () => {
 
 document.getElementById('startGameBtn').addEventListener('click', startGame);
 document.getElementById('restartGameBtn').addEventListener('click', startGame);
+document.getElementById('goToMenuBtn').addEventListener('click', openSnakeGame);
 
 window.openSnakeGame = openSnakeGame;
 window.stopSnakeGame = () => {
