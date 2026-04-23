@@ -68,6 +68,25 @@ onAuthStateChanged(auth, (user) => {
         userInfo.style.display  = 'none';
     }
 });
+// ===== Date Helpers for Leaderboards =====
+function getPeriods() {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    
+    // ISO Week calculation
+    const d2 = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d2.setUTCDate(d2.getUTCDate() + 4 - (d2.getUTCDay()||7));
+    const yearStart = new Date(Date.UTC(d2.getUTCFullYear(),0,1));
+    const weekNo = Math.ceil(( ( (d2 - yearStart) / 86400000) + 1)/7);
+
+    return {
+        daily: `${year}-${month}-${day}`,
+        weekly: `${d2.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`,
+        monthly: `${year}-${month}`
+    };
+}
 
 // ===== Submit Score =====
 export async function submitScore(gameName, score, playerName) {
@@ -77,13 +96,18 @@ export async function submitScore(gameName, score, playerName) {
         return;
     }
     try {
+        const p = getPeriods();
         const docRef = await addDoc(collection(db, 'scores'), {
             userId:    user.uid,
             name:      playerName || user.displayName || 'Guest',
             game:      gameName,
             score:     Number(score),
+            dateStr:   p.daily,
+            weekStr:   p.weekly,
+            monthStr:  p.monthly,
             createdAt: serverTimestamp()
         });
+
         console.log("✅ Score submitted! Doc ID:", docRef.id, "Name:", playerName, "Score:", score);
     } catch (e) {
         console.error("❌ Score submission failed:", e.code, e.message);
@@ -91,15 +115,26 @@ export async function submitScore(gameName, score, playerName) {
 }
 
 // ===== Get Top Scores (one entry per user, best score only) =====
-export async function getTopScores(gameName, topN = 10) {
+export async function getTopScores(gameName, period = 'all', topN = 10) {
     try {
-        console.log("📊 Fetching leaderboard for:", gameName);
+        console.log(`📊 Fetching leaderboard for: ${gameName} (${period})`);
 
-        const q = query(
-            collection(db, 'scores'),
-            orderBy('score', 'desc'),
-            limit(500) // Get many to ensure we can deduplicate
-        );
+        let q;
+        const p = getPeriods();
+
+        if (period === 'all') {
+            q = query(
+                collection(db, 'scores'),
+                orderBy('score', 'desc'),
+                limit(500)
+            );
+        } else if (period === 'daily') {
+            q = query(collection(db, 'scores'), where('dateStr', '==', p.daily));
+        } else if (period === 'weekly') {
+            q = query(collection(db, 'scores'), where('weekStr', '==', p.weekly));
+        } else if (period === 'monthly') {
+            q = query(collection(db, 'scores'), where('monthStr', '==', p.monthly));
+        }
 
         // 5-second timeout
         const timeoutPromise = new Promise((_, reject) =>

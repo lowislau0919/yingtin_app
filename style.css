@@ -421,6 +421,33 @@ canvas {
     margin-bottom: 10px;
 }
 
+.leaderboard-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    width: 95%;
+    max-width: 400px;
+}
+
+.tab-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    padding: 8px 4px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: var(--accent-color);
+    color: white;
+    font-weight: bold;
+}
+
 .game-over-screen p {
     font-size: 1.5rem;
     margin-bottom: 10px;
