@@ -51,7 +51,6 @@
                     </div>
                     <h2 class="fruit-name">蘋果</h2>
                     <p class="fruit-description">新鮮甜美的紅蘋果，充滿營養與活力。</p>
-                    <div id="gameActionContainer"></div>
                 </div>
             </div>
         </main>
@@ -62,9 +61,9 @@
                 <div class="nav-track" id="navTrack">
                     <!-- Page 1 -->
                     <div class="nav-page">
-                        <button class="nav-item active" data-page="snakeGame">
-                            <div class="nav-icon">🐍</div>
-                            <span class="nav-label">貪食蛇</span>
+                        <button class="nav-item active" data-page="apple">
+                            <div class="nav-icon">🍎</div>
+                            <span class="nav-label">蘋果</span>
                         </button>
                         <button class="nav-item" data-page="banana">
                             <div class="nav-icon">🍌</div>
@@ -139,44 +138,7 @@
         </nav>
     </div>
 
-    <!-- Game Overlay -->
-    <div id="gameOverlay" class="game-overlay hidden">
-        <div class="game-header">
-            <button id="closeGameBtn" class="close-game-btn">❌</button>
-            <div class="game-score">Score: <span id="currentScore">0</span></div>
-            <button id="langToggleBtn" class="lang-btn">EN/中</button>
-        </div>
-        <div class="game-canvas-container">
-            <canvas id="gameCanvas" width="300" height="300"></canvas>
-            
-            <div id="gameStartScreen" class="game-over-screen">
-                <h2>貪食蛇</h2>
-                <p>Snake</p>
-                <button id="startGameBtn" class="restart-btn">Start Game / 開始</button>
-            </div>
-
-            <div id="gameOverScreen" class="game-over-screen hidden">
-                <h2 id="gameOverTitle">Game Over</h2>
-                <p>Score: <span id="finalScore">0</span></p>
-                <button id="restartGameBtn" class="restart-btn">Try Again</button>
-                <div id="leaderboardContainer" class="leaderboard-container">
-                    <h3 id="leaderboardTitle">Top 10</h3>
-                    <ul id="leaderboardList"></ul>
-                </div>
-            </div>
-        </div>
-        <div class="d-pad-container">
-            <button class="d-pad-btn up" id="btnUp">▲</button>
-            <div class="d-pad-middle">
-                <button class="d-pad-btn left" id="btnLeft">◀</button>
-                <button class="d-pad-btn right" id="btnRight">▶</button>
-            </div>
-            <button class="d-pad-btn down" id="btnDown">▼</button>
-        </div>
-    </div>
-
     <script type="module" src="firebase.js"></script>
-    <script type="module" src="snake.js"></script>
     <script src="script.js" type="module"></script>
     <script>
         // --- Auto-Refresh Logic for Service Worker ---
