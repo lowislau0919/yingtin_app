@@ -117,9 +117,21 @@ export async function getTopScores(gameName, topN = 10) {
             .filter(s => s.game === gameName)
             .slice(0, topN);
 
+        // FALLBACK: If no online scores yet, show these demo scores
+        if (filtered.length === 0) {
+            return [
+                { name: "YingTin (Top)", score: 500 },
+                { name: "Snake Master", score: 250 },
+                { name: "Fruit Hunter", score: 120 }
+            ];
+        }
+
         return filtered;
     } catch (e) {
         console.warn("Leaderboard fetch failed:", e);
-        return [];
+        return [
+            { name: "Guest User", score: 100 },
+            { name: "Demo Player", score: 50 }
+        ];
     }
 }
