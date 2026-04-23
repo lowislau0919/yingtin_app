@@ -48,8 +48,13 @@
 }
 
 @keyframes splashBounce {
-    from { transform: translateY(0) scale(1); }
-    to   { transform: translateY(-18px) scale(1.08); }
+    from {
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        transform: translateY(-18px) scale(1.08);
+    }
 }
 
 .splash-title {
@@ -70,7 +75,7 @@
 .splash-loader {
     width: 160px;
     height: 4px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     overflow: hidden;
     margin-top: 12px;
@@ -85,10 +90,19 @@
 }
 
 @keyframes loadProgress {
-    0%   { width: 0%; }
-    60%  { width: 75%; }
-    100% { width: 100%; }
+    0% {
+        width: 0%;
+    }
+
+    60% {
+        width: 75%;
+    }
+
+    100% {
+        width: 100%;
+    }
 }
+
 /* ===========================*/
 
 * {
@@ -129,8 +143,13 @@ body {
 }
 
 @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Header Styles */
@@ -157,7 +176,10 @@ body {
 }
 
 /* Auth UI */
-.header-auth { display: flex; align-items: center; }
+.header-auth {
+    display: flex;
+    align-items: center;
+}
 
 .login-btn {
     display: flex;
@@ -173,7 +195,10 @@ body {
     cursor: pointer;
     transition: opacity 0.2s;
 }
-.login-btn:active { opacity: 0.8; }
+
+.login-btn:active {
+    opacity: 0.8;
+}
 
 .user-info {
     display: flex;
@@ -199,7 +224,7 @@ body {
 }
 
 .logout-btn {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 4px 10px;
@@ -208,7 +233,10 @@ body {
     cursor: pointer;
     transition: background 0.2s;
 }
-.logout-btn:active { background: rgba(255,255,255,0.2); }
+
+.logout-btn:active {
+    background: rgba(255, 255, 255, 0.2);
+}
 
 /* Content Area */
 .app-content {
@@ -239,7 +267,7 @@ body {
     justify-content: center;
     font-size: 6rem;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4),
-                inset 0 0 30px rgba(255, 255, 255, 0.05);
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
     animation: float 4s ease-in-out infinite;
     position: relative;
 }
@@ -257,8 +285,15 @@ body {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
 }
 
 .fruit-name {
@@ -283,6 +318,7 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
     width: 100%;
 }
+
 .play-game-btn:active {
     transform: translateY(2px);
     box-shadow: 0 5px 10px rgba(16, 185, 129, 0.4);
@@ -316,8 +352,9 @@ body {
     border-bottom: 1px solid var(--glass-border);
 }
 
-.close-game-btn, .lang-btn {
-    background: rgba(255,255,255,0.1);
+.close-game-btn,
+.lang-btn {
+    background: rgba(255, 255, 255, 0.1);
     border: 1px solid var(--glass-border);
     color: white;
     padding: 8px 12px;
@@ -462,7 +499,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     padding: 10px 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
@@ -491,8 +528,10 @@ canvas {
 #leaderboardList {
     list-style: none;
     padding: 0;
-    font-size: 0.95rem; /* Slightly larger */
-    max-height: 140px; /* Increased from 120px */
+    font-size: 0.95rem;
+    /* Slightly larger */
+    max-height: 140px;
+    /* Increased from 120px */
     overflow-y: auto;
 }
 
@@ -500,7 +539,7 @@ canvas {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 2px;
 }
 
@@ -508,7 +547,8 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 0 45px; /* Increased bottom padding to push buttons UP */
+    padding: 5px 0 45px;
+    /* Increased bottom padding to push buttons UP */
     gap: 5px;
     background: var(--glass-bg);
     border-top: 1px solid var(--glass-border);
@@ -520,10 +560,12 @@ canvas {
 }
 
 .d-pad-btn {
-    width: 55px; /* Reduced from 60px */
-    height: 55px; /* Reduced from 60px */
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
+    width: 55px;
+    /* Reduced from 60px */
+    height: 55px;
+    /* Reduced from 60px */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     color: white;
     font-size: 1.3rem;
@@ -534,8 +576,9 @@ canvas {
     user-select: none;
     -webkit-user-select: none;
 }
+
 .d-pad-btn:active {
-    background: rgba(255,255,255,0.3);
+    background: rgba(255, 255, 255, 0.3);
 }
 
 
@@ -571,13 +614,15 @@ canvas {
 
 .nav-track {
     display: flex;
-    width: 300%; /* Three pages */
+    width: 300%;
+    /* Three pages */
     height: 100%;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-page {
-    width: 33.333%; /* One page of the track */
+    width: 33.333%;
+    /* One page of the track */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -649,8 +694,15 @@ canvas {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive adjustments */
@@ -660,9 +712,11 @@ canvas {
         height: 140px;
         font-size: 4rem;
     }
+
     .fruit-name {
         font-size: 2rem;
     }
+
     .nav-label {
         font-size: 0.65rem;
     }
