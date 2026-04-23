@@ -65,12 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const navItems = document.querySelectorAll('.nav-item');
     const contentArea = document.getElementById('appContent');
     const navTrack = document.getElementById('navTrack');
+    const navContainer = document.getElementById('navTrackContainer');
     const dots = document.querySelectorAll('.dot');
     
     let currentPage = 0;
     let startX = 0;
-    let currentTranslate = 0;
-    let prevTranslate = 0;
     let isDragging = false;
 
     // --- Page Switching Logic ---
@@ -80,14 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update Nav UI
         navItems.forEach(item => {
-            if (item.getAttribute('data-page') === pageId) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
+            item.classList.toggle('active', item.getAttribute('data-page') === pageId);
         });
 
-        // Clear current content with animation
+        // Fade out old content
         const oldContent = document.getElementById('page-content');
         if (oldContent) {
             oldContent.style.opacity = '0';
@@ -95,11 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setTimeout(() => {
-            // Inject new content
             contentArea.innerHTML = `
                 <div id="page-content" class="fade-in">
                     <div class="fruit-page">
-                        <div class="fruit-image-container" style="box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 0 30px ${data.color}33">
+                        <div class="fruit-image-container" style="box-shadow: 0 25px 50px rgba(0,0,0,0.4), inset 0 0 30px ${data.color}33">
                             <span class="fruit-emoji">${data.icon}</span>
                         </div>
                         <h2 class="fruit-name">${data.name}</h2>
@@ -110,83 +104,76 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
-    // --- Swipe Logic ---
+    // --- Nav Track Slide ---
     function setPositionByIndex() {
-        currentTranslate = currentPage * -50; // -50% because each page is half of 200% width
-        navTrack.style.transform = `translateX(${currentTranslate}%)`;
+        navTrack.style.transform = `translateX(${currentPage * -50}%)`;
         updateIndicators();
     }
 
     function updateIndicators() {
-        dots.forEach((dot, index) => {
-            if (index === currentPage) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentPage));
     }
 
-    navTrack.addEventListener('touchstart', touchStart);
-    navTrack.addEventListener('touchend', touchEnd);
-    navTrack.addEventListener('touchmove', touchMove);
-
-    // Mouse events for desktop testing
-    navTrack.addEventListener('mousedown', touchStart);
-    navTrack.addEventListener('mouseup', touchEnd);
-    navTrack.addEventListener('mouseleave', touchEnd);
-    navTrack.addEventListener('mousemove', touchMove);
-
-    function touchStart(event) {
-        startX = getPositionX(event);
+    // --- Touch/Mouse Swipe on the NAV CONTAINER ---
+    function onDragStart(event) {
+        startX = getClientX(event);
         isDragging = true;
     }
 
-    function touchMove(event) {
-        if (isDragging) {
-            const currentX = getPositionX(event);
-            const diff = currentX - startX;
-            // No real-time move for simplicity in this implementation, 
-            // just wait for the end to snap.
-        }
+    function onDragMove(event) {
+        if (!isDragging) return;
+        // Prevent scroll while swiping nav
+        if (event.cancelable) event.preventDefault();
     }
 
-    function touchEnd(event) {
+    function onDragEnd(event) {
         if (!isDragging) return;
         isDragging = false;
-        const endX = getPositionX(event);
+
+        // FIX: use changedTouches for touchend (touches[] is empty on release)
+        const endX = getClientX(event, true);
         const diff = endX - startX;
 
-        if (diff < -50 && currentPage === 0) {
+        if (diff < -40 && currentPage === 0) {
             currentPage = 1;
-        } else if (diff > 50 && currentPage === 1) {
+        } else if (diff > 40 && currentPage === 1) {
             currentPage = 0;
         }
-
         setPositionByIndex();
     }
 
-    function getPositionX(event) {
-        return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+    function getClientX(event, isEnd = false) {
+        if (event.type.startsWith('mouse')) return event.clientX;
+        const list = isEnd ? event.changedTouches : event.touches;
+        return list && list.length > 0 ? list[0].clientX : startX;
     }
 
-    // --- Initialization ---
+    // Attach to the CONTAINER (wider touch target)
+    navContainer.addEventListener('touchstart', onDragStart, { passive: true });
+    navContainer.addEventListener('touchmove', onDragMove, { passive: false });
+    navContainer.addEventListener('touchend', onDragEnd);
+    navContainer.addEventListener('mousedown', onDragStart);
+    navContainer.addEventListener('mousemove', (e) => { if (isDragging) onDragMove(e); });
+    navContainer.addEventListener('mouseup', onDragEnd);
+    navContainer.addEventListener('mouseleave', onDragEnd);
+
+    // --- Nav Item Clicks ---
     navItems.forEach(item => {
         item.addEventListener('click', () => {
-            const pageId = item.getAttribute('data-page');
-            switchPage(pageId);
+            switchPage(item.getAttribute('data-page'));
         });
-        
-        // Tactile feedback
-        item.addEventListener('touchstart', () => { item.style.transform = 'scale(0.95)'; });
+        item.addEventListener('touchstart', () => { item.style.transform = 'scale(0.92)'; }, { passive: true });
         item.addEventListener('touchend', () => { item.style.transform = ''; });
     });
 
-    // Handle dot clicks
-    dots.forEach((dot, index) => {
+    // --- Dot Clicks ---
+    dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
-            currentPage = index;
+            currentPage = i;
             setPositionByIndex();
         });
     });
+
+    // --- Initial state ---
+    setPositionByIndex();
 });

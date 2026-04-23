@@ -1,0 +1,16 @@
+{
+  "name": "YingTin Fruit App",
+  "short_name": "YingTin",
+  "description": "A premium fruit-themed application.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "yingtin_app_icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
