@@ -1,4 +1,4 @@
-import { submitScore, getTopScores } from './firebase.js';
+import { submitScore, getTopScores, auth } from './firebase.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -6,14 +6,13 @@ const gridSize = 15;
 const tileCount = canvas.width / gridSize;
 
 let snake = [];
-let food = {};
+let food = { x: 5, y: 5 };
 let dx = 0;
 let dy = 0;
 let score = 0;
-let gameLoop;
+let gameLoop = null;
 let isGameOver = false;
-let gameSpeed = 150;
-
+let gameActive = false; // New state to track if we are in a match
 let currentLang = 'zh';
 
 const uiText = {
@@ -22,57 +21,93 @@ const uiText = {
         score: "Score:",
         tryAgain: "Try Again",
         top10: "Global Top 10",
-        langToggle: "EN/中"
+        langToggle: "EN/中",
+        startTitle: "Snake Game",
+        startBtn: "Start Game",
+        loginReq: "Please login first!"
     },
     zh: {
         gameOver: "遊戲結束！",
         score: "分數：",
         tryAgain: "再試一次",
         top10: "全球前 10 名",
-        langToggle: "EN/中"
+        langToggle: "EN/中",
+        startTitle: "貪食蛇遊戲",
+        startBtn: "開始遊戲",
+        loginReq: "請先登入！"
     }
 };
 
-function initGame() {
-    snake = [{ x: 10, y: 10 }];
-    food = { x: 5, y: 5 };
-    dx = 0;
-    dy = 0; // Wait for input
-    score = 0;
+// 1. Preparation - Show the start menu
+export function openSnakeGame() {
+    gameActive = false;
     isGameOver = false;
-    document.getElementById('currentScore').innerText = score;
+    dx = 0;
+    dy = 0;
+    
+    document.getElementById('gameStartScreen').classList.remove('hidden');
     document.getElementById('gameOverScreen').classList.add('hidden');
-    spawnFood();
-    if (gameLoop) clearInterval(gameLoop);
-    gameLoop = setInterval(update, gameSpeed);
+    
+    // Draw empty board
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
     updateLanguage();
 }
 
-function update() {
-    if (isGameOver) return;
-    if (dx === 0 && dy === 0) {
-        draw();
-        return; // Don't move until a key is pressed
+// 2. Start the actual game loop
+function startGame() {
+    if (!auth.currentUser) {
+        alert(uiText[currentLang].loginReq);
+        return;
     }
+
+    document.getElementById('gameStartScreen').classList.add('hidden');
+    document.getElementById('gameOverScreen').classList.add('hidden');
     
-    // Move snake
+    // Reset Game State
+    snake = [
+        { x: 10, y: 10 },
+        { x: 10, y: 11 },
+        { x: 10, y: 12 }
+    ];
+    food = { x: 5, y: 5 };
+    dx = 0;
+    dy = -1; // Start moving UP
+    score = 0;
+    isGameOver = false;
+    gameActive = true;
+    
+    document.getElementById('currentScore').innerText = score;
+    
+    if (gameLoop) clearInterval(gameLoop);
+    gameLoop = setInterval(gameStep, 150);
+}
+
+function gameStep() {
+    if (!gameActive || isGameOver) return;
+    
+    // Calculate new head
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     
-    // Wall collision logic (die)
+    // Wall collision
     if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-        return gameOver();
+        endMatch();
+        return;
     }
     
     // Self collision
     for (let i = 0; i < snake.length; i++) {
         if (head.x === snake[i].x && head.y === snake[i].y) {
-            return gameOver();
+            endMatch();
+            return;
         }
     }
     
+    // Move
     snake.unshift(head);
     
-    // Eat food
+    // Food check
     if (head.x === food.x && head.y === food.y) {
         score += 10;
         document.getElementById('currentScore').innerText = score;
@@ -85,115 +120,104 @@ function update() {
 }
 
 function draw() {
-    // Clear canvas
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Draw food
     ctx.fillStyle = '#ef4444';
-    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 1, gridSize - 1);
+    ctx.fillRect(food.x * gridSize + 1, food.y * gridSize + 1, gridSize - 2, gridSize - 2);
     
     // Draw snake
     ctx.fillStyle = '#10b981';
-    for (let i = 0; i < snake.length; i++) {
-        ctx.fillRect(snake[i].x * gridSize, snake[i].y * gridSize, gridSize - 1, gridSize - 1);
-    }
+    snake.forEach((part, index) => {
+        if (index === 0) ctx.fillStyle = '#34d399'; // Head slightly brighter
+        else ctx.fillStyle = '#10b981';
+        ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+    });
 }
 
 function spawnFood() {
-    food = {
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount)
-    };
-    // Ensure food doesn't spawn on snake
-    for (let part of snake) {
-        if (part.x === food.x && part.y === food.y) {
-            spawnFood();
-            break;
+    let newFood;
+    while (true) {
+        newFood = {
+            x: Math.floor(Math.random() * tileCount),
+            y: Math.floor(Math.random() * tileCount)
+        };
+        // Check if on snake
+        let collision = false;
+        for (let part of snake) {
+            if (part.x === newFood.x && part.y === newFood.y) {
+                collision = true;
+                break;
+            }
         }
+        if (!collision) break;
     }
+    food = newFood;
 }
 
-async function gameOver() {
+async function endMatch() {
     isGameOver = true;
+    gameActive = false;
     clearInterval(gameLoop);
     
     document.getElementById('finalScore').innerText = score;
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
     try {
-        // Submit score
         await submitScore('snake', score);
-    } catch (error) {
-        console.error("Failed to submit score:", error);
+    } catch (e) {
+        console.error("Score submit failed", e);
     }
     
-    // Load leaderboard
     loadLeaderboard();
 }
 
 async function loadLeaderboard() {
     const list = document.getElementById('leaderboardList');
     list.innerHTML = '<li>Loading...</li>';
-    
     try {
         const scores = await getTopScores('snake', 10);
         list.innerHTML = '';
-        
         if (scores.length === 0) {
-            list.innerHTML = '<li>No scores yet!</li>';
+            list.innerHTML = '<li>No scores yet</li>';
         } else {
-            scores.forEach((s, index) => {
+            scores.forEach((s, i) => {
                 const li = document.createElement('li');
-                li.innerHTML = `<span>#${index + 1} ${s.name || 'Anonymous'}</span> <span>${s.score}</span>`;
+                li.innerHTML = `<span>#${i+1} ${s.name || 'Anonymous'}</span> <span>${s.score}</span>`;
                 list.appendChild(li);
             });
         }
-    } catch (error) {
-        console.error("Failed to load leaderboard:", error);
-        list.innerHTML = '<li>Error loading scores.</li>';
+    } catch (e) {
+        list.innerHTML = '<li>Leaderboard Error</li>';
     }
 }
 
 // --- Controls ---
-function move(direction) {
-    if (direction === 'UP' && dy !== 1) { dx = 0; dy = -1; }
-    if (direction === 'DOWN' && dy !== -1) { dx = 0; dy = 1; }
-    if (direction === 'LEFT' && dx !== 1) { dx = -1; dy = 0; }
-    if (direction === 'RIGHT' && dx !== -1) { dx = 1; dy = 0; }
+function changeDir(dir) {
+    if (!gameActive) return;
+    if (dir === 'UP' && dy !== 1) { dx = 0; dy = -1; }
+    if (dir === 'DOWN' && dy !== -1) { dx = 0; dy = 1; }
+    if (dir === 'LEFT' && dx !== 1) { dx = -1; dy = 0; }
+    if (dir === 'RIGHT' && dx !== -1) { dx = 1; dy = 0; }
 }
 
-document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); move('UP'); });
-document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); move('DOWN'); });
-document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); move('LEFT'); });
-document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); move('RIGHT'); });
+// Buttons
+document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('UP'); });
+document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('DOWN'); });
+document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('LEFT'); });
+document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('RIGHT'); });
 
-// Mouse fallback for testing
-document.getElementById('btnUp').addEventListener('mousedown', () => move('UP'));
-document.getElementById('btnDown').addEventListener('mousedown', () => move('DOWN'));
-document.getElementById('btnLeft').addEventListener('mousedown', () => move('LEFT'));
-document.getElementById('btnRight').addEventListener('mousedown', () => move('RIGHT'));
-
-// Keyboard fallback
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp') move('UP');
-    if (e.key === 'ArrowDown') move('DOWN');
-    if (e.key === 'ArrowLeft') move('LEFT');
-    if (e.key === 'ArrowRight') move('RIGHT');
-});
-
-// --- UI Actions ---
-document.getElementById('restartGameBtn').addEventListener('click', initGame);
-
+// UI Language
 function updateLanguage() {
     const texts = uiText[currentLang];
     document.getElementById('gameOverTitle').innerText = texts.gameOver;
     document.getElementById('leaderboardTitle').innerText = texts.top10;
     document.getElementById('restartGameBtn').innerText = texts.tryAgain;
+    document.getElementById('startGameBtn').innerText = texts.startBtn;
     
-    // Update score prefix
-    const scoreElement = document.querySelector('.game-score');
-    scoreElement.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
+    const scoreBox = document.querySelector('.game-score');
+    scoreBox.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
 }
 
 document.getElementById('langToggleBtn').addEventListener('click', () => {
@@ -201,25 +225,11 @@ document.getElementById('langToggleBtn').addEventListener('click', () => {
     updateLanguage();
 });
 
-function openSnakeGame() {
-    // Show start screen, hide game over screen
-    document.getElementById('gameStartScreen').classList.remove('hidden');
-    document.getElementById('gameOverScreen').classList.add('hidden');
-    
-    // Clear canvas
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+document.getElementById('startGameBtn').addEventListener('click', startGame);
+document.getElementById('restartGameBtn').addEventListener('click', startGame);
 
-document.getElementById('startGameBtn').addEventListener('click', () => {
-    document.getElementById('gameStartScreen').classList.add('hidden');
-    initGame();
-});
-
-// Export to window so script.js can call it
 window.openSnakeGame = openSnakeGame;
-window.initSnakeGame = initGame;
 window.stopSnakeGame = () => {
-    isGameOver = true;
+    gameActive = false;
     clearInterval(gameLoop);
 };

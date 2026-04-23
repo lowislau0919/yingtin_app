@@ -179,7 +179,17 @@
     <script type="module" src="snake.js"></script>
     <script src="script.js" type="module"></script>
     <script>
-        // Lock zoom - prevent pinch-to-zoom on iOS and Android
+        // --- Auto-Refresh Logic for Service Worker ---
+        let refreshing = false;
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                window.location.reload();
+            });
+        }
+
+        // --- Lock zoom ---
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
