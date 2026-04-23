@@ -59,6 +59,8 @@ const uiText = {
 export function openSnakeGame() {
     gameActive = false;
     isGameOver = false;
+    if (gameLoop) clearInterval(gameLoop);
+    
     document.getElementById('gameStartScreen').classList.remove('hidden');
     document.getElementById('gameOverScreen').classList.add('hidden');
     drawInitial();

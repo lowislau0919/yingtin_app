@@ -11,6 +11,10 @@
     --safe-area-bottom: env(safe-area-inset-bottom);
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* ===== Splash Screen ===== */
 .splash-screen {
     position: fixed;
