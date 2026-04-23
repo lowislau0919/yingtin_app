@@ -402,12 +402,12 @@ canvas {
 }
 
 .leaderboard-container {
-    width: 80%;
-    max-width: 300px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 10px;
-    border: 1px solid var(--glass-border);
+    width: 90%;
+    max-width: 320px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid var(--accent-color);
 }
 
 .leaderboard-container h3 {
@@ -419,8 +419,8 @@ canvas {
 #leaderboardList {
     list-style: none;
     padding: 0;
-    font-size: 0.9rem;
-    max-height: 120px;
+    font-size: 0.95rem; /* Slightly larger */
+    max-height: 140px; /* Increased from 120px */
     overflow-y: auto;
 }
 
@@ -436,8 +436,8 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 0 15px; /* Reduced from 10px 0 30px to move it up */
-    gap: 8px;
+    padding: 5px 0 45px; /* Increased bottom padding to push buttons UP */
+    gap: 5px;
     background: var(--glass-bg);
     border-top: 1px solid var(--glass-border);
 }
@@ -448,13 +448,13 @@ canvas {
 }
 
 .d-pad-btn {
-    width: 60px;
-    height: 60px;
+    width: 55px; /* Reduced from 60px */
+    height: 55px; /* Reduced from 60px */
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 15px;
+    border-radius: 12px;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: flex;
     justify-content: center;
     align-items: center;
