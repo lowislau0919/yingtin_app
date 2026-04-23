@@ -30,6 +30,7 @@
         <header class="app-header">
             <h1 class="app-title">YingTin App</h1>
             <div class="header-auth">
+                <button id="refreshAppBtn" class="lang-toggle-btn" style="margin-right:10px; font-size:1.2rem; cursor:pointer;" onclick="window.location.reload(true)">🔄</button>
                 <button id="loginBtn" class="login-btn">
                     <span>🔑</span> 登入
                 </button>
@@ -144,7 +145,10 @@
         <div class="game-header">
             <button id="closeGameBtn" class="close-game-btn">❌</button>
             <div class="game-score">Score: <span id="currentScore">0</span></div>
-            <button id="langToggleBtn" class="lang-btn">EN/中</button>
+            <div style="display:flex; gap:5px;">
+                <button id="refreshGameBtn" class="lang-btn" style="cursor:pointer; background:rgba(255,255,255,0.1); border:none; border-radius:4px;" onclick="window.location.reload(true)">🔄</button>
+                <button id="langToggleBtn" class="lang-btn">EN/中</button>
+            </div>
         </div>
         <div class="game-canvas-container">
             <canvas id="gameCanvas" width="300" height="300"></canvas>
