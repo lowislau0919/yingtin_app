@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yingtin-cache-v2';
+const CACHE_NAME = 'yingtin-cache-v4';
 const ASSETS = [
   '/',
   '/index.html',
@@ -29,7 +29,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Network-First strategy for HTML/JS/CSS to ensure users get the latest version
+  // Network-First strategy
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );
