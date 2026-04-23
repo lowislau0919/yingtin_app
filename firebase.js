@@ -30,6 +30,7 @@ const userInfo   = document.getElementById('userInfo');
 // ===== Sign In =====
 loginBtn.addEventListener('click', async () => {
     try {
+        provider.setCustomParameters({ prompt: 'select_account' });
         const result = await signInWithPopup(auth, provider);
         await saveUserProfile(result.user);
     } catch (e) {
