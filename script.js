@@ -58,6 +58,36 @@ const fruitData = {
         icon: '🍦',
         description: '冰涼沁心的雪糕，是炎炎夏日裡最幸福的享受。',
         color: '#fdf4ff'
+    },
+    tree: {
+        name: '大樹',
+        icon: '🌳',
+        description: '巍峨挺立的大樹，是大地的守護者，給予我們清新的空氣。',
+        color: '#16a34a'
+    },
+    flower: {
+        name: '花朵',
+        icon: '🌸',
+        description: '嬌豔芬芳的花朵，點綴著世界，散發出迷人的香氣。',
+        color: '#f472b6'
+    },
+    leaf: {
+        name: '葉子',
+        icon: '🍃',
+        description: '翠綠輕盈的葉子，隨風搖曳，是大自然生命力的象徵。',
+        color: '#4ade80'
+    },
+    sun: {
+        name: '太陽',
+        icon: '☀️',
+        description: '光芒萬丈的太陽，溫暖照耀大地，賦予萬物生長的能量。',
+        color: '#fbbf24'
+    },
+    mountain: {
+        name: '高山',
+        icon: '⛰️',
+        description: '雄偉壯闊的高山，屹立千年，象徵著堅韌不拔的精神。',
+        color: '#78716c'
     }
 };
 
@@ -106,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Nav Track Slide ---
     function setPositionByIndex() {
-        navTrack.style.transform = `translateX(${currentPage * -50}%)`;
+        navTrack.style.transform = `translateX(${currentPage * -33.333}%)`;
         updateIndicators();
     }
 
@@ -134,10 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const endX = getClientX(event, true);
         const diff = endX - startX;
 
-        if (diff < -40 && currentPage === 0) {
-            currentPage = 1;
-        } else if (diff > 40 && currentPage === 1) {
-            currentPage = 0;
+        if (diff < -40 && currentPage < 2) {
+            currentPage++;
+        } else if (diff > 40 && currentPage > 0) {
+            currentPage--;
         }
         setPositionByIndex();
     }

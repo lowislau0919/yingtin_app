@@ -165,13 +165,13 @@ body {
 
 .nav-track {
     display: flex;
-    width: 200%; /* Two pages */
+    width: 300%; /* Three pages */
     height: 100%;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-page {
-    width: 50%; /* One page of the track */
+    width: 33.333%; /* One page of the track */
     display: flex;
     justify-content: space-around;
     align-items: center;
