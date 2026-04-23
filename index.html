@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YingTin App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="app-title">YingTin App</h1>
+        </header>
+
+        <!-- Content Area -->
+        <main class="app-content" id="appContent">
+            <!-- Content will be injected by script.js -->
+            <div id="page-content" class="fade-in">
+                <div class="fruit-page">
+                    <div class="fruit-image-container">
+                        <span class="fruit-emoji">🍎</span>
+                    </div>
+                    <h2 class="fruit-name">蘋果</h2>
+                    <p class="fruit-description">新鮮甜美的紅蘋果，充滿營養與活力。</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-track-container" id="navTrackContainer">
+                <div class="nav-track" id="navTrack">
+                    <!-- Page 1 -->
+                    <div class="nav-page">
+                        <button class="nav-item active" data-page="apple">
+                            <div class="nav-icon">🍎</div>
+                            <span class="nav-label">蘋果</span>
+                        </button>
+                        <button class="nav-item" data-page="banana">
+                            <div class="nav-icon">🍌</div>
+                            <span class="nav-label">香蕉</span>
+                        </button>
+                        <button class="nav-item" data-page="lemon">
+                            <div class="nav-icon">🍋</div>
+                            <span class="nav-label">檸檬</span>
+                        </button>
+                        <button class="nav-item" data-page="mango">
+                            <div class="nav-icon">🥭</div>
+                            <span class="nav-label">芒果</span>
+                        </button>
+                        <button class="nav-item" data-page="pineapple">
+                            <div class="nav-icon">🍍</div>
+                            <span class="nav-label">鳳梨</span>
+                        </button>
+                    </div>
+                    <!-- Page 2 -->
+                    <div class="nav-page">
+                        <button class="nav-item" data-page="strawberry">
+                            <div class="nav-icon">🍓</div>
+                            <span class="nav-label">士多啤梨</span>
+                        </button>
+                        <button class="nav-item" data-page="potato">
+                            <div class="nav-icon">🥔</div>
+                            <span class="nav-label">馬鈴薯</span>
+                        </button>
+                        <button class="nav-item" data-page="tomato">
+                            <div class="nav-icon">🍅</div>
+                            <span class="nav-label">番茄</span>
+                        </button>
+                        <button class="nav-item" data-page="vegetable">
+                            <div class="nav-icon">🥦</div>
+                            <span class="nav-label">蔬菜</span>
+                        </button>
+                        <button class="nav-item" data-page="icecream">
+                            <div class="nav-icon">🍦</div>
+                            <span class="nav-label">雪糕</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-indicators">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
