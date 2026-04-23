@@ -3,7 +3,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc,
-         query, orderBy, limit, getDocs, getDocsFromServer, serverTimestamp }
+         query, orderBy, limit, getDocs, serverTimestamp }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -71,67 +71,69 @@ onAuthStateChanged(auth, (user) => {
 // ===== Submit Score =====
 export async function submitScore(gameName, score, playerName) {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) {
+        console.error("submitScore: No user logged in!");
+        return;
+    }
     try {
-        await addDoc(collection(db, 'scores'), {
+        const docRef = await addDoc(collection(db, 'scores'), {
             userId:    user.uid,
             name:      playerName || user.displayName || 'Guest',
             game:      gameName,
-            score:     score,
+            score:     Number(score),
             createdAt: serverTimestamp()
         });
+        console.log("✅ Score submitted! Doc ID:", docRef.id, "Name:", playerName, "Score:", score);
     } catch (e) {
-        console.error("Score submission failed:", e);
+        console.error("❌ Score submission failed:", e.code, e.message);
     }
 }
 
 // ===== Get Top Scores =====
 export async function getTopScores(gameName, topN = 10) {
     const demoScores = [
-        { name: "YingTin", score: 500 },
-        { name: "SnakePro", score: 300 },
-        { name: "AppleLover", score: 150 }
+        { name: "YingTin (Top)", score: 500 },
+        { name: "Snake Master", score: 250 },
+        { name: "Fruit Hunter", score: 120 }
     ];
 
     try {
-        // Create a timeout promise
-        const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Timeout")), 3000)
-        );
+        console.log("📊 Fetching leaderboard for:", gameName);
 
-        // Simple query: orderBy 'score' only to avoid composite index issues
         const q = query(
             collection(db, 'scores'),
             orderBy('score', 'desc'),
             limit(100)
         );
 
-        // Force fetch from server to avoid any cache hangs
-        const snap = await Promise.race([
-            getDocsFromServer(q),
-            timeoutPromise
-        ]);
+        // 5-second timeout
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Firestore timeout after 5s")), 5000)
+        );
 
-        const allScores = snap.docs.map(d => d.data());
+        const snap = await Promise.race([getDocs(q), timeoutPromise]);
+
+        console.log("📦 Firestore returned", snap.docs.length, "total docs");
+
+        const allScores = snap.docs.map(d => {
+            const data = d.data();
+            console.log("  📝 Doc:", data.name, data.score, data.game);
+            return data;
+        });
+
         const filtered = allScores
             .filter(s => s.game === gameName)
             .slice(0, topN);
 
-        // FALLBACK: If no online scores yet, show these demo scores
-        if (filtered.length === 0) {
-            return [
-                { name: "YingTin (Top)", score: 500 },
-                { name: "Snake Master", score: 250 },
-                { name: "Fruit Hunter", score: 120 }
-            ];
-        }
+        console.log("🏆 Filtered scores for", gameName, ":", filtered.length);
 
-        return filtered;
+        return filtered.length > 0 ? filtered : demoScores;
     } catch (e) {
-        console.warn("Leaderboard fetch failed:", e);
+        console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
+        // Show the actual error in the leaderboard so user can see what went wrong
         return [
-            { name: "Guest User", score: 100 },
-            { name: "Demo Player", score: 50 }
+            { name: `Error: ${e.message.substring(0, 25)}`, score: "---" },
+            ...demoScores
         ];
     }
 }
