@@ -398,7 +398,7 @@ canvas {
     align-items: center;
     z-index: 10;
     border-radius: 10px;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -406,13 +406,13 @@ canvas {
 /* Leaderboard modal: full overlay with scrollable list */
 #leaderboardModal {
     justify-content: flex-start;
-    padding-top: 30px;
+    padding-top: 20px;
 }
 
 #leaderboardModal h3 {
     font-size: 1.5rem;
     color: var(--accent-color);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .game-over-screen h2 {
@@ -425,8 +425,8 @@ canvas {
     display: flex;
     gap: 5px;
     margin-bottom: 15px;
-    width: 95%;
-    max-width: 400px;
+    width: 100%;
+    max-width: 450px;
 }
 
 .tab-btn {
@@ -434,8 +434,8 @@ canvas {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #aaa;
-    padding: 8px 4px;
-    font-size: 0.8rem;
+    padding: 8px 2px;
+    font-size: 0.85rem;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
@@ -515,19 +515,19 @@ canvas {
 #leaderboardList {
     list-style: none;
     padding: 0;
-    width: 95%;
-    max-width: 400px;
-    max-height: 65vh;
+    width: 100%;
+    max-width: 450px;
+    height: 70vh; /* Increased height */
     overflow-y: auto;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 #leaderboardList li {
     display: flex;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 8px 10px; /* Tighter padding to fit more items */
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 1rem;
+    font-size: 1.05rem; /* Slightly larger text */
     width: 100%;
     box-sizing: border-box;
 }
