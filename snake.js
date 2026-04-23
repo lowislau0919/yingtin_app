@@ -37,7 +37,7 @@ function initGame() {
     snake = [{ x: 10, y: 10 }];
     food = { x: 5, y: 5 };
     dx = 0;
-    dy = -1;
+    dy = 0; // Wait for input
     score = 0;
     isGameOver = false;
     document.getElementById('currentScore').innerText = score;
@@ -50,6 +50,10 @@ function initGame() {
 
 function update() {
     if (isGameOver) return;
+    if (dx === 0 && dy === 0) {
+        draw();
+        return; // Don't move until a key is pressed
+    }
     
     // Move snake
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
@@ -117,8 +121,12 @@ async function gameOver() {
     document.getElementById('finalScore').innerText = score;
     document.getElementById('gameOverScreen').classList.remove('hidden');
     
-    // Submit score
-    await submitScore('snake', score);
+    try {
+        // Submit score
+        await submitScore('snake', score);
+    } catch (error) {
+        console.error("Failed to submit score:", error);
+    }
     
     // Load leaderboard
     loadLeaderboard();
@@ -128,17 +136,22 @@ async function loadLeaderboard() {
     const list = document.getElementById('leaderboardList');
     list.innerHTML = '<li>Loading...</li>';
     
-    const scores = await getTopScores('snake', 10);
-    list.innerHTML = '';
-    
-    if (scores.length === 0) {
-        list.innerHTML = '<li>No scores yet!</li>';
-    } else {
-        scores.forEach((s, index) => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>#${index + 1} ${s.name || 'Anonymous'}</span> <span>${s.score}</span>`;
-            list.appendChild(li);
-        });
+    try {
+        const scores = await getTopScores('snake', 10);
+        list.innerHTML = '';
+        
+        if (scores.length === 0) {
+            list.innerHTML = '<li>No scores yet!</li>';
+        } else {
+            scores.forEach((s, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>#${index + 1} ${s.name || 'Anonymous'}</span> <span>${s.score}</span>`;
+                list.appendChild(li);
+            });
+        }
+    } catch (error) {
+        console.error("Failed to load leaderboard:", error);
+        list.innerHTML = '<li>Error loading scores.</li>';
     }
 }
 

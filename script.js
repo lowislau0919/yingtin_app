@@ -146,7 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.hasGame) {
                 const playBtn = document.getElementById('playGameBtn');
                 if (playBtn) {
-                    playBtn.addEventListener('click', () => {
+                    playBtn.addEventListener('click', async () => {
+                        const { auth } = await import('./firebase.js');
+                        if (!auth.currentUser) {
+                            alert('請先登入才能遊玩遊戲！\nPlease login first to play the game!');
+                            return;
+                        }
                         document.getElementById('gameOverlay').classList.remove('hidden');
                         if (window.initSnakeGame) window.initSnakeGame();
                     });
