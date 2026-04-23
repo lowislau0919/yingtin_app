@@ -437,7 +437,7 @@ canvas {
     list-style: none;
     padding: 0;
     width: 90%;
-    max-height: 200px;
+    max-height: 380px; /* Increased from 200px to show all 10 players */
     overflow-y: auto;
     margin-bottom: 20px;
 }
