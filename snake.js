@@ -263,12 +263,26 @@ async function loadLeaderboard() {
         }
         scores.forEach((s, i) => {
             const li = document.createElement('li');
-            li.innerHTML = `<span>#${i+1} ${s.name || 'Anon'}</span> <span>${s.score}</span>`;
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.padding = '4px 0';
+            li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.innerText = `${i+1}. ${s.name || 'Anon'}`;
+            
+            const scoreSpan = document.createElement('span');
+            scoreSpan.innerText = s.score;
+            scoreSpan.style.color = 'var(--accent-color)';
+            scoreSpan.style.fontWeight = 'bold';
+            
+            li.appendChild(nameSpan);
+            li.appendChild(scoreSpan);
             list.appendChild(li);
         });
     } catch (e) {
         console.error("Leaderboard Load Error:", e);
-        list.innerHTML = `<li style="text-align:center; color:#ef4444;">Error / 錯誤: ${e.message.substring(0,20)}...</li>`;
+        list.innerHTML = `<li style="text-align:center; color:#ef4444; font-size:0.8rem;">Error: ${e.message}</li>`;
     }
 }
 

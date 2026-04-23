@@ -117,9 +117,18 @@ export async function getTopScores(gameName, topN = 10) {
             .filter(s => s.game === gameName)
             .slice(0, topN);
 
-        return filtered.length > 0 ? filtered : demoScores;
+        // Always add one local test score to verify UI is working
+        const finalResults = [
+            { name: "✨ Online Active", score: "OK" },
+            ...filtered
+        ];
+
+        return finalResults.length > 1 ? finalResults : demoScores;
     } catch (e) {
         console.warn("Leaderboard fetch failed or timed out, using demo scores:", e);
-        return demoScores;
+        return [
+            { name: "⚠️ Offline Mode", score: "---" },
+            ...demoScores
+        ];
     }
 }
