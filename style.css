@@ -354,13 +354,28 @@ canvas {
 .game-over-screen {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(15, 23, 42, 0.97);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 10;
     border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Leaderboard modal: full overlay with scrollable list */
+#leaderboardModal {
+    justify-content: flex-start;
+    padding-top: 30px;
+}
+
+#leaderboardModal h3 {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-bottom: 15px;
 }
 
 .game-over-screen h2 {
@@ -436,8 +451,9 @@ canvas {
 #leaderboardList {
     list-style: none;
     padding: 0;
-    width: 90%;
-    max-height: 380px; /* Increased from 200px to show all 10 players */
+    width: 95%;
+    max-width: 400px;
+    max-height: 65vh;
     overflow-y: auto;
     margin-bottom: 20px;
 }
@@ -445,8 +461,11 @@ canvas {
 #leaderboardList li {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: 10px 12px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .game-over-actions {
