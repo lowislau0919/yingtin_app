@@ -114,21 +114,21 @@ export async function getTopScores(gameName, topN = 10) {
         // Filter by game
         const gameScores = allScores.filter(s => s.game === gameName);
 
-        // Deduplicate: keep only each user's BEST score
-        const bestByUser = {};
+        // Deduplicate: keep only the BEST score per unique NAME
+        const bestByName = {};
         for (const s of gameScores) {
-            const key = s.userId || s.name; // group by userId, fallback to name
-            if (!bestByUser[key] || Number(s.score) > Number(bestByUser[key].score)) {
-                bestByUser[key] = s;
+            const key = s.name || 'Anon'; // group by player name
+            if (!bestByName[key] || Number(s.score) > Number(bestByName[key].score)) {
+                bestByName[key] = s;
             }
         }
 
         // Sort by score descending and take topN
-        const topScores = Object.values(bestByUser)
+        const topScores = Object.values(bestByName)
             .sort((a, b) => Number(b.score) - Number(a.score))
             .slice(0, topN);
 
-        console.log("🏆 Unique top scores:", topScores.length);
+        console.log("🏆 Unique top scores by name:", topScores.length);
         return topScores;
     } catch (e) {
         console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
