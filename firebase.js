@@ -89,51 +89,48 @@ export async function submitScore(gameName, score, playerName) {
     }
 }
 
-// ===== Get Top Scores =====
+// ===== Get Top Scores (one entry per user, best score only) =====
 export async function getTopScores(gameName, topN = 10) {
-    const demoScores = [
-        { name: "YingTin (Top)", score: 500 },
-        { name: "Snake Master", score: 250 },
-        { name: "Fruit Hunter", score: 120 }
-    ];
-
     try {
         console.log("📊 Fetching leaderboard for:", gameName);
 
         const q = query(
             collection(db, 'scores'),
             orderBy('score', 'desc'),
-            limit(100)
+            limit(500) // Get many to ensure we can deduplicate
         );
 
         // 5-second timeout
         const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Firestore timeout after 5s")), 5000)
+            setTimeout(() => reject(new Error("Timeout")), 5000)
         );
 
         const snap = await Promise.race([getDocs(q), timeoutPromise]);
-
         console.log("📦 Firestore returned", snap.docs.length, "total docs");
 
-        const allScores = snap.docs.map(d => {
-            const data = d.data();
-            console.log("  📝 Doc:", data.name, data.score, data.game);
-            return data;
-        });
+        const allScores = snap.docs.map(d => d.data());
 
-        const filtered = allScores
-            .filter(s => s.game === gameName)
+        // Filter by game
+        const gameScores = allScores.filter(s => s.game === gameName);
+
+        // Deduplicate: keep only each user's BEST score
+        const bestByUser = {};
+        for (const s of gameScores) {
+            const key = s.userId || s.name; // group by userId, fallback to name
+            if (!bestByUser[key] || Number(s.score) > Number(bestByUser[key].score)) {
+                bestByUser[key] = s;
+            }
+        }
+
+        // Sort by score descending and take topN
+        const topScores = Object.values(bestByUser)
+            .sort((a, b) => Number(b.score) - Number(a.score))
             .slice(0, topN);
 
-        console.log("🏆 Filtered scores for", gameName, ":", filtered.length);
-
-        return filtered.length > 0 ? filtered : demoScores;
+        console.log("🏆 Unique top scores:", topScores.length);
+        return topScores;
     } catch (e) {
         console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
-        // Show the actual error in the leaderboard so user can see what went wrong
-        return [
-            { name: `Error: ${e.message.substring(0, 25)}`, score: "---" },
-            ...demoScores
-        ];
+        return [];
     }
 }
