@@ -175,6 +175,19 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+.version-badge {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 6px;
+    font-weight: normal;
+    letter-spacing: 0;
+    -webkit-text-fill-color: var(--text-secondary); /* Override the text-fill-color from app-title */
+}
+
 /* Auth UI */
 .header-auth {
     display: flex;
@@ -618,6 +631,107 @@ canvas {
     margin-top: auto;
     border-top: 1px solid var(--glass-border);
 }
+
+/* Phase Progress */
+.phase-progress-container {
+    padding: 15px 20px 10px;
+    background: rgba(15, 23, 42, 0.5);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.phase-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#phaseLabel {
+    color: var(--accent-color);
+}
+
+.progress-bar-bg {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-color), #818cf8);
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Big Two */
+.player-hand-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+    width: 100%;
+}
+
+.playing-card {
+    width: 60px;
+    height: 90px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.playing-card.selected {
+    transform: translateY(-15px);
+    box-shadow: 0 0 10px #ffd700;
+    border-color: #ffd700;
+}
+
+.card-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    position: absolute;
+}
+
+.card-value.top { top: 3px; left: 5px; }
+.card-value.bottom { bottom: 3px; right: 5px; transform: rotate(180deg); }
+
+.card-suit {
+    font-size: 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.player-info {
+    background: rgba(0,0,0,0.5);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.played-cards-display .playing-card {
+    cursor: default;
+    transform: none !important;
+}
+
 
 
 

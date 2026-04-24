@@ -134,19 +134,21 @@ export async function getTopScores(gameName, period = 'all', topN = 10) {
 
         let q;
         const p = getPeriods();
+        const baseQuery = collection(db, 'scores');
 
         if (period === 'all') {
             q = query(
-                collection(db, 'scores'),
+                baseQuery,
+                where('game', '==', gameName),
                 orderBy('score', 'desc'),
-                limit(500)
+                limit(100) // Fetch top 100 to deduplicate
             );
         } else if (period === 'daily') {
-            q = query(collection(db, 'scores'), where('dateStr', '==', p.daily));
+            q = query(baseQuery, where('game', '==', gameName), where('dateStr', '==', p.daily), orderBy('score', 'desc'), limit(100));
         } else if (period === 'weekly') {
-            q = query(collection(db, 'scores'), where('weekStr', '==', p.weekly));
+            q = query(baseQuery, where('game', '==', gameName), where('weekStr', '==', p.weekly), orderBy('score', 'desc'), limit(100));
         } else if (period === 'monthly') {
-            q = query(collection(db, 'scores'), where('monthStr', '==', p.monthly));
+            q = query(baseQuery, where('game', '==', gameName), where('monthStr', '==', p.monthly), orderBy('score', 'desc'), limit(100));
         }
 
         // 5-second timeout
@@ -155,31 +157,45 @@ export async function getTopScores(gameName, period = 'all', topN = 10) {
         );
 
         const snap = await Promise.race([getDocs(q), timeoutPromise]);
-        console.log("📦 Firestore returned", snap.docs.length, "total docs");
+        console.log("📦 Firestore returned", snap.docs.length, "docs for", gameName);
 
         const allScores = snap.docs.map(d => d.data());
 
-        // Filter by game
-        const gameScores = allScores.filter(s => s.game === gameName);
-
-        // Deduplicate: keep only the BEST score per unique NAME
-        const bestByName = {};
-        for (const s of gameScores) {
-            const key = s.name || 'Anon'; // group by player name
-            if (!bestByName[key] || Number(s.score) > Number(bestByName[key].score)) {
-                bestByName[key] = s;
+        // Deduplicate: keep only the BEST score per unique USER (using userId for better sync)
+        const bestByUser = {};
+        for (const s of allScores) {
+            const key = s.userId || s.name || 'Anon'; 
+            if (!bestByUser[key] || Number(s.score) > Number(bestByUser[key].score)) {
+                bestByUser[key] = s;
             }
         }
 
         // Sort by score descending and take topN
-        const topScores = Object.values(bestByName)
+        const topScores = Object.values(bestByUser)
             .sort((a, b) => Number(b.score) - Number(a.score))
             .slice(0, topN);
 
-        console.log("🏆 Unique top scores by name:", topScores.length);
+        console.log("🏆 Unique top scores:", topScores.length);
         return topScores;
     } catch (e) {
         console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
+        // Fallback for missing index: try fetching without orderBy and sort in memory
+        if (e.code === 'failed-precondition') {
+            console.warn("⚠️ Firestore index missing! Falling back to in-memory sort...");
+            const qFallback = query(collection(db, 'scores'), where('game', '==', gameName), limit(500));
+            const snapFallback = await getDocs(qFallback);
+            const allScores = snapFallback.docs.map(d => d.data());
+            const bestByUser = {};
+            for (const s of allScores) {
+                const key = s.userId || s.name || 'Anon';
+                if (!bestByUser[key] || Number(s.score) > Number(bestByUser[key].score)) {
+                    bestByUser[key] = s;
+                }
+            }
+            return Object.values(bestByUser)
+                .sort((a, b) => Number(b.score) - Number(a.score))
+                .slice(0, topN);
+        }
         return [];
     }
 }

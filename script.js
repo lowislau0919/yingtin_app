@@ -6,12 +6,11 @@ const fruitData = {
         color: '#ef4444',
         hasGame: true
     },
-    minecraft: {
-        name: 'Minecraft',
-        icon: '🟩',
-        description: '一個充滿方塊的 3D 世界！點擊中間的方塊來挖掘資源。<br>(Tap the block to mine!)',
-        color: '#16a34a',
-        hasGame: true
+    banana: {
+        name: '香蕉',
+        icon: '🍌',
+        description: '彎彎的黃香蕉，香甜可口，是能量的來源。',
+        color: '#facc15'
     },
     lemon: {
         name: '檸檬',
@@ -153,13 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert('請先登入才能遊玩！\nPlease login first to play!');
                             return;
                         }
-                        if (pageId === 'minecraft') {
-                            document.getElementById('minecraftOverlay').classList.remove('hidden');
-                            if (window.initMinecraftGame) window.initMinecraftGame();
-                        } else {
-                            document.getElementById('gameOverlay').classList.remove('hidden');
-                            if (window.openSnakeGame) window.openSnakeGame();
-                        }
+                        document.getElementById('gameOverlay').classList.remove('hidden');
+                        if (window.openSnakeGame) window.openSnakeGame();
                     });
                 }
             }
@@ -172,14 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeGameBtn.addEventListener('click', () => {
             document.getElementById('gameOverlay').classList.add('hidden');
             if (window.stopSnakeGame) window.stopSnakeGame();
-        });
-    }
-
-    const closeMineBtn = document.getElementById('closeMinecraftBtn');
-    if (closeMineBtn) {
-        closeMineBtn.addEventListener('click', () => {
-            document.getElementById('minecraftOverlay').classList.add('hidden');
-            if (window.stopMinecraftGame) window.stopMinecraftGame();
         });
     }
 

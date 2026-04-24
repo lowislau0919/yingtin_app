@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,6 +10,7 @@
     <meta name="theme-color" content="#0f172a">
     <link rel="icon" type="image/svg+xml" href="yingtin_app_icon.svg">
 </head>
+
 <body>
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
@@ -27,7 +29,9 @@
         <header class="app-header">
             <h1 class="app-title">YingTin App</h1>
             <div class="header-auth">
-                <button id="refreshAppBtn" class="lang-toggle-btn" style="margin-right:10px; font-size:1.2rem; cursor:pointer;" onclick="window.location.reload(true)">🔄</button>
+                <button id="refreshAppBtn" class="lang-toggle-btn"
+                    style="margin-right:10px; font-size:1.2rem; cursor:pointer;"
+                    onclick="window.location.reload(true)">🔄</button>
                 <button id="loginBtn" class="login-btn">
                     <span>🔑</span> 登入
                 </button>
@@ -64,9 +68,9 @@
                             <div class="nav-icon">🍎</div>
                             <span class="nav-label">蘋果</span>
                         </button>
-                        <button class="nav-item" data-page="minecraft">
-                            <div class="nav-icon">🟩</div>
-                            <span class="nav-label">Minecraft</span>
+                        <button class="nav-item" data-page="banana">
+                            <div class="nav-icon">🍌</div>
+                            <span class="nav-label">香蕉</span>
                         </button>
                         <button class="nav-item" data-page="lemon">
                             <div class="nav-icon">🍋</div>
@@ -143,13 +147,15 @@
             <button id="closeGameBtn" class="close-game-btn">❌</button>
             <div class="game-score">Score: <span id="currentScore">0</span></div>
             <div style="display:flex; gap:5px;">
-                <button id="refreshGameBtn" class="lang-btn" style="cursor:pointer; background:rgba(255,255,255,0.1); border:none; border-radius:4px;" onclick="window.location.reload(true)">🔄</button>
+                <button id="refreshGameBtn" class="lang-btn"
+                    style="cursor:pointer; background:rgba(255,255,255,0.1); border:none; border-radius:4px;"
+                    onclick="window.location.reload(true)">🔄</button>
                 <button id="langToggleBtn" class="lang-btn">EN/中</button>
             </div>
         </div>
         <div class="game-canvas-container">
             <canvas id="gameCanvas" width="300" height="300"></canvas>
-            
+
             <div id="gameStartScreen" class="game-over-screen">
                 <h2 class="game-title">🍎 Apple Snake</h2>
                 <p>Eat apples, grow long!</p>
@@ -169,6 +175,7 @@
                 </div>
                 <div class="menu-actions">
                     <button id="restartGameBtn" class="restart-btn">Try Again</button>
+                    <button id="showLeaderboardBtn2" class="menu-btn secondary">🏆 Top Scores / 排行榜</button>
                     <button id="goToMenuBtn" class="menu-btn">Back to Menu</button>
                 </div>
             </div>
@@ -185,25 +192,11 @@
         </div>
     </div>
 
-    <!-- Minecraft 3D Overlay -->
-    <div id="minecraftOverlay" class="game-overlay hidden">
-        <div class="game-header" style="padding-top: 85px;">
-            <button id="closeMinecraftBtn" class="close-game-btn">❌</button>
-            <div class="game-score">Blocks: <span id="blockCount">0</span></div>
-            <button id="refreshMinecraftBtn" class="lang-btn" onclick="window.location.reload(true)">🔄</button>
-        </div>
-        <div id="minecraftCanvasContainer" class="game-canvas-container" style="background: #000; overflow: hidden; position: relative;">
-            <!-- Three.js Canvas will be injected here -->
-            <div id="minecraftHint" style="position: absolute; bottom: 20px; color: white; opacity: 0.7; pointer-events: none;">Tap to Mine! / 點擊挖掘!</div>
-        </div>
-        <!-- Mini Leaderboard for OneBlock -->
-        <div class="leaderboard-preview" style="padding: 10px; background: rgba(0,0,0,0.8);">
-             <button id="showMineLeaderboardBtn" class="menu-btn" style="width: 100%;">🏆 排行榜 / Leaderboard</button>
-        </div>
-    </div>
+
 
     <!-- Leaderboard Modal (Shared) -->
-    <div id="leaderboardModal" class="game-over-screen hidden" style="z-index: 1001; position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div id="leaderboardModal" class="game-over-screen hidden"
+        style="z-index: 3000; position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <h3 id="leaderboardTitle" style="margin-top: 40px;">Top 10</h3>
         <div class="leaderboard-tabs" style="display: flex; gap: 5px; margin-bottom: 15px;">
             <button class="tab-btn" data-period="daily">日</button>
@@ -211,14 +204,15 @@
             <button class="tab-btn" data-period="monthly">月</button>
             <button class="tab-btn active" data-period="all">總</button>
         </div>
-        <ul id="leaderboardList" style="width: 80%; max-width: 300px; padding: 0; list-style: none; overflow-y: auto; max-height: 50vh;"></ul>
+        <ul id="leaderboardList"
+            style="width: 80%; max-width: 300px; padding: 0; list-style: none; overflow-y: auto; max-height: 50vh;">
+        </ul>
         <button id="closeLeaderboardBtn" class="menu-btn" style="margin-top: 20px;">Close / 關閉</button>
     </div>
 
     <script type="module" src="firebase.js"></script>
     <script type="module" src="snake.js"></script>
     <script src="script.js" type="module"></script>
-    <script type="module" src="minecraft.js"></script>
     <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
     <script type="importmap">
       {
@@ -240,14 +234,14 @@
         }
 
         // --- Lock zoom ---
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function (e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
-        document.addEventListener('touchmove', function(e) {
+        document.addEventListener('touchmove', function (e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) e.preventDefault(); // block double-tap zoom
             lastTouchEnd = now;
@@ -263,4 +257,5 @@
         }
     </script>
 </body>
+
 </html>

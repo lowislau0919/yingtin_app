@@ -307,10 +307,13 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-document.getElementById('showMineLeaderboardBtn').addEventListener('click', () => {
-    loadLeaderboard('oneblock');
-    document.getElementById('leaderboardModal').classList.remove('hidden');
-});
+const showMineLeaderboardBtn = document.getElementById('showMineLeaderboardBtn');
+if (showMineLeaderboardBtn) {
+    showMineLeaderboardBtn.addEventListener('click', () => {
+        loadLeaderboard('oneblock');
+        document.getElementById('leaderboardModal').classList.remove('hidden');
+    });
+}
 
 function changeDir(dir) {
     if (!gameActive) return;
@@ -321,25 +324,31 @@ function changeDir(dir) {
 }
 
 // Events
-document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('UP'); });
-document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('DOWN'); });
-document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('LEFT'); });
-document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('RIGHT'); });
+const btnUp = document.getElementById('btnUp');
+if (btnUp) btnUp.addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('UP'); });
+const btnDown = document.getElementById('btnDown');
+if (btnDown) btnDown.addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('DOWN'); });
+const btnLeft = document.getElementById('btnLeft');
+if (btnLeft) btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('LEFT'); });
+const btnRight = document.getElementById('btnRight');
+if (btnRight) btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('RIGHT'); });
 
 // Swipe Controls for Canvas
 let touchStartX = 0;
 let touchStartY = 0;
 
-canvas.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-}, {passive: true});
+if (canvas) {
+    canvas.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, {passive: true});
 
-canvas.addEventListener('touchend', (e) => {
-    let touchEndX = e.changedTouches[0].screenX;
-    let touchEndY = e.changedTouches[0].screenY;
-    handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
-}, {passive: true});
+    canvas.addEventListener('touchend', (e) => {
+        let touchEndX = e.changedTouches[0].screenX;
+        let touchEndY = e.changedTouches[0].screenY;
+        handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+    }, {passive: true});
+}
 
 function handleSwipe(startX, startY, endX, endY) {
     const diffX = endX - startX;
@@ -360,14 +369,29 @@ function handleSwipe(startX, startY, endX, endY) {
 
 function updateLanguage() {
     const texts = uiText[currentLang];
-    document.getElementById('gameOverTitle').innerText = texts.gameOver;
-    document.getElementById('leaderboardTitle').innerText = texts.top10;
-    document.getElementById('showLeaderboardBtn').innerText = `🏆 ${texts.top10}`;
-    document.getElementById('restartGameBtn').innerText = texts.tryAgain;
-    document.getElementById('startGameBtn').innerText = texts.startBtn;
-    document.getElementById('goToMenuBtn').innerText = texts.menuBtn;
+    const gameOverTitle = document.getElementById('gameOverTitle');
+    if (gameOverTitle) gameOverTitle.innerText = texts.gameOver;
+    
+    const leaderboardTitle = document.getElementById('leaderboardTitle');
+    if (leaderboardTitle) leaderboardTitle.innerText = texts.top10;
+    
+    const showLeaderboardBtn = document.getElementById('showLeaderboardBtn');
+    if (showLeaderboardBtn) showLeaderboardBtn.innerText = `🏆 ${texts.top10}`;
+    
+    const showLeaderboardBtn2 = document.getElementById('showLeaderboardBtn2');
+    if (showLeaderboardBtn2) showLeaderboardBtn2.innerText = `🏆 ${texts.top10}`;
+    
+    const restartGameBtn = document.getElementById('restartGameBtn');
+    if (restartGameBtn) restartGameBtn.innerText = texts.tryAgain;
+    
+    const startGameBtn = document.getElementById('startGameBtn');
+    if (startGameBtn) startGameBtn.innerText = texts.startBtn;
+    
+    const goToMenuBtn = document.getElementById('goToMenuBtn');
+    if (goToMenuBtn) goToMenuBtn.innerText = texts.menuBtn;
+    
     const scoreBox = document.querySelector('.game-score');
-    scoreBox.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
+    if (scoreBox) scoreBox.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
 
     // Update leaderboard tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -378,16 +402,31 @@ function updateLanguage() {
     });
 }
 
-document.getElementById('langToggleBtn').addEventListener('click', () => {
-    currentLang = currentLang === 'zh' ? 'en' : 'zh';
-    updateLanguage();
-});
+const langToggleBtn = document.getElementById('langToggleBtn');
+if (langToggleBtn) {
+    langToggleBtn.addEventListener('click', () => {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        updateLanguage();
+    });
+}
 
-document.getElementById('startGameBtn').addEventListener('click', startGame);
-document.getElementById('restartGameBtn').addEventListener('click', startGame);
-document.getElementById('goToMenuBtn').addEventListener('click', openSnakeGame);
-document.getElementById('showLeaderboardBtn').addEventListener('click', showLeaderboard);
-document.getElementById('closeLeaderboardBtn').addEventListener('click', closeLeaderboard);
+const startGameBtn = document.getElementById('startGameBtn');
+if (startGameBtn) startGameBtn.addEventListener('click', startGame);
+
+const restartGameBtn = document.getElementById('restartGameBtn');
+if (restartGameBtn) restartGameBtn.addEventListener('click', startGame);
+
+const goToMenuBtn = document.getElementById('goToMenuBtn');
+if (goToMenuBtn) goToMenuBtn.addEventListener('click', openSnakeGame);
+
+const showLeaderboardBtn = document.getElementById('showLeaderboardBtn');
+if (showLeaderboardBtn) showLeaderboardBtn.addEventListener('click', showLeaderboard);
+
+const showLeaderboardBtn2 = document.getElementById('showLeaderboardBtn2');
+if (showLeaderboardBtn2) showLeaderboardBtn2.addEventListener('click', showLeaderboard);
+
+const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
+if (closeLeaderboardBtn) closeLeaderboardBtn.addEventListener('click', closeLeaderboard);
 
 window.openSnakeGame = openSnakeGame;
 window.stopSnakeGame = () => {
