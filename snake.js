@@ -42,7 +42,11 @@ const uiText = {
         startBtn: "Start Game",
         menuBtn: "Back to Menu",
         loginReq: "Login Required!",
-        eatMsg: "Yum!"
+        eatMsg: "Yum!",
+        daily: "Daily",
+        weekly: "Weekly",
+        monthly: "Monthly",
+        all: "All-Time"
     },
     zh: {
         gameOver: "遊戲結束！",
@@ -54,7 +58,11 @@ const uiText = {
         startBtn: "開始遊戲",
         menuBtn: "返回選單",
         loginReq: "請先登入！",
-        eatMsg: "好味！"
+        eatMsg: "好味！",
+        daily: "日",
+        weekly: "週",
+        monthly: "月",
+        all: "總"
     }
 };
 
@@ -353,6 +361,14 @@ function updateLanguage() {
     document.getElementById('goToMenuBtn').innerText = texts.menuBtn;
     const scoreBox = document.querySelector('.game-score');
     scoreBox.innerHTML = `${texts.score} <span id="currentScore">${score}</span>`;
+
+    // Update leaderboard tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const period = btn.getAttribute('data-period');
+        if (texts[period]) {
+            btn.innerText = texts[period];
+        }
+    });
 }
 
 document.getElementById('langToggleBtn').addEventListener('click', () => {

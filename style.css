@@ -347,7 +347,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 40px 20px 10px; /* Increased top padding to lower the header */
+    padding: 60px 20px 10px; /* Lowered even more as requested */
     background: var(--glass-bg);
     border-bottom: 1px solid var(--glass-border);
 }
