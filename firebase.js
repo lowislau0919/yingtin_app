@@ -97,9 +97,22 @@ export async function submitScore(gameName, score, playerName) {
     }
     try {
         const p = getPeriods();
+        const finalName = playerName || user.displayName || 'Guest';
+
+        // Check if name is already taken by another Google Account
+        const nameQuery = query(collection(db, 'scores'), where('name', '==', finalName), limit(1));
+        const nameSnap = await getDocs(nameQuery);
+        if (!nameSnap.empty) {
+            const existingUserId = nameSnap.docs[0].data().userId;
+            if (existingUserId !== user.uid) {
+                alert(`The name "${finalName}" is already taken by another Google account. Please use a different name! / 這個名字已被其他帳號使用，請選擇另一個名字！`);
+                return false; // Stop submission
+            }
+        }
+
         const docRef = await addDoc(collection(db, 'scores'), {
             userId:    user.uid,
-            name:      playerName || user.displayName || 'Guest',
+            name:      finalName,
             game:      gameName,
             score:     Number(score),
             dateStr:   p.daily,

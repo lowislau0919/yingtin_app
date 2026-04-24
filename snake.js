@@ -311,6 +311,38 @@ document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.pre
 document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('LEFT'); });
 document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); changeDir('RIGHT'); });
 
+// Swipe Controls for Canvas
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+}, {passive: true});
+
+canvas.addEventListener('touchend', (e) => {
+    let touchEndX = e.changedTouches[0].screenX;
+    let touchEndY = e.changedTouches[0].screenY;
+    handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+}, {passive: true});
+
+function handleSwipe(startX, startY, endX, endY) {
+    const diffX = endX - startX;
+    const diffY = endY - startY;
+    // Require at least 30px swipe distance
+    if (Math.abs(diffX) > 30 || Math.abs(diffY) > 30) {
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal swipe
+            if (diffX > 0) changeDir('RIGHT');
+            else changeDir('LEFT');
+        } else {
+            // Vertical swipe
+            if (diffY > 0) changeDir('DOWN');
+            else changeDir('UP');
+        }
+    }
+}
+
 function updateLanguage() {
     const texts = uiText[currentLang];
     document.getElementById('gameOverTitle').innerText = texts.gameOver;
