@@ -3,7 +3,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc,
-         query, orderBy, limit, getDocs, serverTimestamp, where }
+         query, orderBy, limit, getDocs, serverTimestamp, where, deleteDoc }
     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -169,4 +169,32 @@ export async function getTopScores(gameName, period = 'all', topN = 10) {
         console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
         return [];
     }
+}
+
+// Admin function to wipe all scores
+export async function wipeAllScores() {
+    try {
+        const snap = await getDocs(collection(db, 'scores'));
+        let count = 0;
+        for (const d of snap.docs) {
+            await deleteDoc(doc(db, 'scores', d.id));
+            count++;
+        }
+        alert(`Admin: Successfully deleted ${count} scores! Leaderboard is reset.`);
+        window.location.href = window.location.pathname; // remove ?admin=reset
+    } catch (e) {
+        alert(`Admin Delete Error: ${e.message}`);
+    }
+}
+
+// Secret URL trigger
+if (window.location.search.includes('admin=reset')) {
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            document.body.innerHTML = '<h1 style="color:white; text-align:center; margin-top:50px;">Deleting all scores... Please wait.</h1>';
+            await wipeAllScores();
+        } else {
+            alert('Admin: You must log in first to delete scores!');
+        }
+    });
 }
