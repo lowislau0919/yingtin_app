@@ -6,11 +6,12 @@ const fruitData = {
         color: '#ef4444',
         hasGame: true
     },
-    banana: {
-        name: '香蕉',
-        icon: '🍌',
-        description: '成熟香甜的香蕉，是運動後的最佳能量補給。',
-        color: '#eab308'
+    minecraft: {
+        name: 'Minecraft',
+        icon: '🟩',
+        description: '一個充滿方塊的 3D 世界！點擊中間的方塊來挖掘資源。<br>(Tap the block to mine!)',
+        color: '#16a34a',
+        hasGame: true
     },
     lemon: {
         name: '檸檬',
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h2 class="fruit-name">${data.name}</h2>
                         <p class="fruit-description">${data.description}</p>
                         <div id="gameActionContainer">
-                            ${data.hasGame ? `<button id="playGameBtn" class="play-game-btn">🎮 Play Snake / 玩遊戲</button>` : ''}
+                            ${data.hasGame ? `<button id="playGameBtn" class="play-game-btn">🎮 ${pageId === 'minecraft' ? 'Minecraft 3D' : 'Play Snake / 玩遊戲'}</button>` : ''}
                         </div>
                     </div>
                 </div>
@@ -152,8 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert('請先登入才能遊玩！\nPlease login first to play!');
                             return;
                         }
-                        document.getElementById('gameOverlay').classList.remove('hidden');
-                        if (window.openSnakeGame) window.openSnakeGame();
+                        if (pageId === 'minecraft') {
+                            document.getElementById('minecraftOverlay').classList.remove('hidden');
+                            if (window.initMinecraftGame) window.initMinecraftGame();
+                        } else {
+                            document.getElementById('gameOverlay').classList.remove('hidden');
+                            if (window.openSnakeGame) window.openSnakeGame();
+                        }
                     });
                 }
             }
@@ -166,6 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
         closeGameBtn.addEventListener('click', () => {
             document.getElementById('gameOverlay').classList.add('hidden');
             if (window.stopSnakeGame) window.stopSnakeGame();
+        });
+    }
+
+    const closeMineBtn = document.getElementById('closeMinecraftBtn');
+    if (closeMineBtn) {
+        closeMineBtn.addEventListener('click', () => {
+            document.getElementById('minecraftOverlay').classList.add('hidden');
+            if (window.stopMinecraftGame) window.stopMinecraftGame();
         });
     }
 

@@ -253,13 +253,15 @@ async function endMatch() {
     }
 }
 
+let currentLeaderboardGame = 'snake';
 let currentPeriod = 'all';
 
-async function loadLeaderboard() {
+export async function loadLeaderboard(game = 'snake') {
+    currentLeaderboardGame = game;
     const list = document.getElementById('leaderboardList');
     list.innerHTML = '<li style="text-align:center; opacity:0.6;">Loading / 載入中...</li>';
     try {
-        const scores = await getTopScores('snake', currentPeriod, 10);
+        const scores = await getTopScores(currentLeaderboardGame, currentPeriod, 10);
 
         list.innerHTML = '';
         scores.forEach((s, i) => {
@@ -301,8 +303,13 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         currentPeriod = e.target.getAttribute('data-period');
-        loadLeaderboard();
+        loadLeaderboard(currentLeaderboardGame);
     });
+});
+
+document.getElementById('showMineLeaderboardBtn').addEventListener('click', () => {
+    loadLeaderboard('oneblock');
+    document.getElementById('leaderboardModal').classList.remove('hidden');
 });
 
 function changeDir(dir) {

@@ -607,6 +607,19 @@ canvas {
     background: rgba(255, 255, 255, 0.3);
 }
 
+/* Minecraft Specific */
+#minecraftCanvasContainer canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.leaderboard-preview {
+    margin-top: auto;
+    border-top: 1px solid var(--glass-border);
+}
+
+
 
 .fruit-description {
     font-size: 1.1rem;

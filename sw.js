@@ -1,10 +1,11 @@
-const CACHE_NAME = 'yingtin-cache-v31';
+const CACHE_NAME = 'yingtin-cache-v32';
 const ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/script.js',
   '/snake.js',
+  '/minecraft.js',
   '/firebase.js',
   '/manifest.json'
 ];
