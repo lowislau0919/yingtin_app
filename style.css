@@ -347,7 +347,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 20px 10px;
+    padding: 40px 20px 10px; /* Increased top padding to lower the header */
     background: var(--glass-bg);
     border-bottom: 1px solid var(--glass-border);
 }
@@ -574,8 +574,7 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 0 45px;
-    /* Increased bottom padding to push buttons UP */
+    padding: 15px 0 65px; /* Increased bottom padding to push buttons further UP */
     gap: 5px;
     background: var(--glass-bg);
     border-top: 1px solid var(--glass-border);
