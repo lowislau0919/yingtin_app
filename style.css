@@ -167,12 +167,13 @@ body {
 }
 
 .app-title {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 1px;
     background: linear-gradient(to right, #38bdf8, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    white-space: nowrap;
 }
 
 .version-badge {
@@ -185,7 +186,8 @@ body {
     margin-left: 6px;
     font-weight: normal;
     letter-spacing: 0;
-    -webkit-text-fill-color: var(--text-secondary); /* Override the text-fill-color from app-title */
+    -webkit-text-fill-color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 /* Auth UI */
