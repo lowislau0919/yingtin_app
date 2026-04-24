@@ -347,7 +347,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 60px 20px 10px; /* Lowered even more as requested */
+    padding: 85px 20px 15px; /* Lowered even more to satisfy user request */
     background: var(--glass-bg);
     border-bottom: 1px solid var(--glass-border);
 }
