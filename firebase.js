@@ -179,12 +179,19 @@ export async function getTopScores(gameName, period = 'all', topN = 10) {
         return topScores;
     } catch (e) {
         console.error("❌ Leaderboard fetch FAILED:", e.code, e.message);
-        // Fallback for missing index: try fetching without orderBy and sort in memory
+        // Fallback for missing index: fetch all scores for the game and filter/sort in memory
         if (e.code === 'failed-precondition') {
-            console.warn("⚠️ Firestore index missing! Falling back to in-memory sort...");
+            console.warn("⚠️ Firestore index missing! Falling back to in-memory filter+sort...");
             const qFallback = query(collection(db, 'scores'), where('game', '==', gameName), limit(500));
             const snapFallback = await getDocs(qFallback);
-            const allScores = snapFallback.docs.map(d => d.data());
+            let allScores = snapFallback.docs.map(d => d.data());
+
+            // Apply period filter in memory
+            const p = getPeriods();
+            if (period === 'daily')   allScores = allScores.filter(s => s.dateStr  === p.daily);
+            if (period === 'weekly')  allScores = allScores.filter(s => s.weekStr  === p.weekly);
+            if (period === 'monthly') allScores = allScores.filter(s => s.monthStr === p.monthly);
+
             const bestByUser = {};
             for (const s of allScores) {
                 const key = s.userId || s.name || 'Anon';
