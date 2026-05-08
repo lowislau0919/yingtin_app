@@ -873,6 +873,33 @@ canvas {
     }
 
     .nav-label {
-        font-size: 0.65rem;
-    }
+        font-size: ，
+        /* YingTin 全站修正：隱藏重複返回/refresh + 修復底部導航橫掃 */
+header:has(+ header),
+.app-sub-header,
+.inner-header,
+.sub-header,
+.page-sub-header,
+.mobile-sub-header {
+  display: none !important;
+}
+
+.nav-track-container {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+}
+
+.nav-track {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+}
+
+.nav-page {
+  flex: 0 0 100% !important;
+}
+
+.bottom-nav {
+  touch-action: pan-x !important;
 }
