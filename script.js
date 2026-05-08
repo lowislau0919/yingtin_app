@@ -243,3 +243,43 @@ document.addEventListener('DOMContentLoaded', () => {
     switchPage('apple');
     setPositionByIndex();
 });
+// YingTin 全站修正：移除重複返回/refresh header
+function fixDuplicateHeadersAndNav() {
+  const headers = Array.from(document.querySelectorAll('header, .app-header, .page-header, .sub-header, .inner-header, div'));
+
+  headers.forEach((el) => {
+    const text = el.innerText || '';
+
+    const isDuplicate =
+      text.includes('返回主頁') ||
+      text.includes('重新整理') ||
+      text.includes('手機鎖定直向滑動');
+
+    if (isDuplicate) {
+      el.style.display = 'none';
+    }
+  });
+
+  const navContainer = document.getElementById('navTrackContainer');
+  const navTrack = document.getElementById('navTrack');
+
+  if (navContainer) {
+    navContainer.style.overflowX = 'auto';
+    navContainer.style.overflowY = 'hidden';
+    navContainer.style.webkitOverflowScrolling = 'touch';
+    navContainer.style.touchAction = 'pan-x';
+  }
+
+  if (navTrack) {
+    navTrack.style.display = 'flex';
+    navTrack.style.flexWrap = 'nowrap';
+  }
+}
+
+window.addEventListener('load', fixDuplicateHeadersAndNav);
+document.addEventListener('DOMContentLoaded', fixDuplicateHeadersAndNav);
+
+new MutationObserver(fixDuplicateHeadersAndNav).observe(document.body, {
+  childList: true,
+  subtree: true
+});
